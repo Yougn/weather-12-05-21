@@ -1,124 +1,124 @@
 <template>
-  <div class="wrapper">
-    <img src="../assets/day.svg" alt="Street" />
+  <div>
+    <img class="weather-bg" src="../assets/day.svg" alt="Street" />
     <div class="weather">
       <div class="weather-place">
         <p class="weather-place__date">{{ weather.date }}</p>
-        <p class="weather-place__city">{{ weather.city }}</p>
+        <p class="weather-place__city">{{ weather.city_name }}</p>
       </div>
       <div class="weather-now">
         <p class="weather-now__state">
-          <span class="weather-now__state__text">
-            {{ weather.currentState }}
+          <span>
+            {{ weather.data[0].weather.description }}
           </span>
-          <span class="weather-now__state__svg"><SunIcon /></span>
+          <span><SunIcon /></span>
         </p>
-        <p class="weather-now__temperature">{{ weather.currentTemperature }}</p>
-        <p class="weather-now-peak">
-          <span class="weather-now-peak__item weather-now-peak__item--top">
-            {{ weather.temperaturesPick.top }}
+        <p class="weather-now__temperature">{{ weather.data[0].temp }}</p>
+        <p class="weather-peaks">
+          <span class="weather-peaks__item weather-peaks__item_top">
+            {{ weather.data[0].max_temp }}
           </span>
-          <span class="weather-now-peak__item weather-now-peak__item--down">
-            {{ weather.temperaturesPick.down }}
+          <span class="weather-peaks__item weather-peaks__item_down">
+            {{ weather.data[0].min_temp }}
           </span>
         </p>
       </div>
       <ul class="weather-info">
-        <li class="weather-info__item weather-info__item--humidity">
-          <span class="weather-info__item__svg"><HumidityIcon /></span>
-          <p class="weather-info__item__text">{{ weather.info.humidity }}</p>
-          <span class="weather-info__item__subtitle">Humidity</span>
+        <li class="weather-info__item">
+          <span class="weather-info__icon"><HumidityIcon /></span>
+          <p class="weather-info__text">{{ weather.data[0].rh }}</p>
+          <span class="weather-info__subtitle">Humidity</span>
         </li>
         <li class="weather-info__item weather-info__item--pressure">
-          <span class="weather-info__item__svg"><PressureIcon /></span>
-          <p class="weather-info__item__text">{{ weather.info.pressure }}</p>
-          <span class="weather-info__item__subtitle">Pressure</span>
+          <span class="weather-info__icon"><PressureIcon /></span>
+          <p class="weather-info__text">{{ weather.data[0].pres }}</p>
+          <span class="weather-info__subtitle">Pressure</span>
         </li>
         <li class="weather-info__item weather-info__item--wind">
-          <span class="weather-info__item__svg"><WindIcon /></span>
-          <p class="weather-info__item__text">{{ weather.info.wind }}</p>
-          <span class="weather-info__item__subtitle">Wind</span>
+          <span class="weather-info__icon"><WindIcon /></span>
+          <p class="weather-info__text">{{ weather.data[0].wind_spd }}</p>
+          <span class="weather-info__subtitle">Wind</span>
         </li>
         <li class="weather-info__item weather-info__item--sunrise">
-          <span class="weather-info__item__svg"><SunriseIcon /></span>
-          <p class="weather-info__item__text">{{ weather.info.sunrise }}</p>
-          <span class="weather-info__item__subtitle">Sunrise</span>
+          <span class="weather-info__icon"><SunriseIcon /></span>
+          <p class="weather-info__text">{{ weather.data[0].sunrise_ts }}</p>
+          <span class="weather-info__subtitle">Sunrise</span>
         </li>
         <li class="weather-info__item weather-info__item--sunset">
-          <span class="weather-info__item__svg"><SunsetIcon /></span>
-          <p class="weather-info__item__text">{{ weather.info.sunset }}</p>
-          <span class="weather-info__item__subtitle">Sunset</span>
+          <span class="weather-info__icon"><SunsetIcon /></span>
+          <p class="weather-info__text">{{ weather.data[0].sunset_ts }}</p>
+          <span class="weather-info__subtitle">Sunset</span>
         </li>
         <li class="weather-info__item weather-info__item--daytime">
           <span class="weather-info__item__svg"><DaytimeIcon /></span>
-          <p class="weather-info__item__text">{{ weather.info.daytime }}</p>
-          <span class="weather-info__item__subtitle">Daytime</span>
+          <p class="weather-info__text">{{ weather.data[0].daytime }}</p>
+          <span class="weather-info__subtitle">Daytime</span>
         </li>
       </ul>
       <ul class="weather-week">
-        <li class="weather-week__item weather-week__item--mon">
-          <span class="weather-week__item__svg weather-week__item__svg--state">
+        <li class="weather-week__item">
+          <span class="weather-week__icon weather-week__icon_state">
             <SmallSunIcon />
           </span>
-          <p class="weather-week__item__title">
-            {{ weather.week[0].weekDate }}
+          <p class="weather-week__title">
+            {{ weather.data[0].datetime }}
           </p>
-          <span class="weather-week__item__roll">
-            <span class="weather-week__item__text">
-              {{ weather.week[0].temperaturesPick.top }}
-              <span class="weather-week__item__svg"><ArrowupIcon /></span>
+          <span class="weather-week__container">
+            <span class="weather-week__text">
+              {{ weather.data[0].max_temp }}
+              <span class="weather-week__icon"><ArrowupIcon /></span>
             </span>
-            <span class="weather-week__item__text">
-              {{ weather.week[0].temperaturesPick.down }}
-              <span class="weather-week__item__svg"><ArrowdownIcon /></span>
+            <span class="weather-week__text">
+              {{ weather.data[0].min_temp }}
+              <span class="weather-week__icon"><ArrowdownIcon /></span>
             </span>
           </span>
         </li>
-        <li class="weather-week__item weather-week__item--tue">
-          <span class="weather-week__item__svg weather-week__item__svg--state">
+        <li class="weather-week__item">
+          <span class="weather-week__icon weather-week__icon_state">
             <SmallSunIcon />
           </span>
-          <p class="weather-week__item__title">Tue, 22</p>
-          <span class="weather-week__item__roll">
-            <span class="weather-week__item__text">
+          <p class="weather-week__title">Tue, 22</p>
+          <span class="weather-week__container">
+            <span class="weather-week__text">
               35°C
-              <span class="weather-week__item__svg"><ArrowupIcon /></span>
+              <span class="weather-week__icon"><ArrowupIcon /></span>
             </span>
-            <span class="weather-week__item__text">
+            <span class="weather-week__text">
               27°C
-              <span class="weather-week__item__svg"><ArrowdownIcon /></span>
+              <span class="weather-week__icon"><ArrowdownIcon /></span>
             </span>
           </span>
         </li>
-        <li class="weather-week__item weather-week__item--wed">
-          <span class="weather-week__item__svg weather-week__item__svg--state">
+        <li class="weather-week__item">
+          <span class="weather-week__icon weather-week__icon_state">
             <SmallSunIcon />
           </span>
-          <p class="weather-week__item__title">Wed, 22</p>
-          <span class="weather-week__item__roll">
-            <span class="weather-week__item__text">
+          <p class="weather-week__title">Wed, 22</p>
+          <span class="weather-week__container">
+            <span class="weather-week__text">
               35°C
-              <span class="weather-week__item__svg"><ArrowupIcon /></span>
+              <span class="weather-week__icon"><ArrowupIcon /></span>
             </span>
-            <span class="weather-week__item__text">
+            <span class="weather-week__text">
               29°C
-              <span class="weather-week__item__svg"><ArrowdownIcon /></span>
+              <span class="weather-week__icon"><ArrowdownIcon /></span>
             </span>
           </span>
         </li>
-        <li class="weather-week__item weather-week__item--thur">
-          <span class="weather-week__item__svg weather-week__item__svg--state">
+        <li class="weather-week__item">
+          <span class="weather-week__icon weather-week__icon_state">
             <SmallSunIcon />
           </span>
-          <p class="weather-week__item__title">Thur, 22</p>
-          <span class="weather-week__item__roll">
-            <span class="weather-week__item__text">
+          <p class="weather-week__title">Thur, 22</p>
+          <span class="weather-week__container">
+            <span class="weather-week__text">
               35°C
-              <span class="weather-week__item__svg"><ArrowupIcon /></span>
+              <span class="weather-week__icon"><ArrowupIcon /></span>
             </span>
-            <span class="weather-week__item__text">
+            <span class="weather-week__text">
               30°C
-              <span class="weather-week__item__svg"><ArrowdownIcon /></span>
+              <span class="weather-week__icon"><ArrowdownIcon /></span>
             </span>
           </span>
         </li>
@@ -164,29 +164,67 @@ export default {
     getWeather() {
       this.weather = {
         date: "Friday, 15 May 2021 10:00AM",
-        city: "Taganrog, Russia",
-        currentState: "Cloudy",
-        currentTemperature: 44,
-        temperaturesPick: {
-          top: "44°C",
-          down: "27°C",
-        },
-        info: {
-          humidity: "50%",
-          pressure: "1,007mBar",
-          wind: "30 km/h",
-          sunrise: "6:09 AM",
-          sunset: "7:09 PM",
-          daytime: "13h 0m",
-        },
-        week: [
+        city_name: "Taganrog, Russia",
+        data: [
           {
-            state: "sunny",
-            weekDate: "Mon, 21",
-            temperaturesPick: {
-              top: "44°C",
-              down: "27°C",
+            temp: "44",
+            max_temp: "44°C",
+            min_temp: "27°C",
+            rh: "50%",
+            pres: "1,007mBar",
+            wind_spd: "30 km/h",
+            sunrise_ts: "6:09 AM",
+            sunset_ts: "7:09 PM",
+            datetime: "Monday",
+            weather: {
+              description: "Broken clouds",
             },
+            daytime: "13h 0m",
+          },
+          {
+            temp: "43",
+            max_temp: "44°C",
+            min_temp: "27°C",
+            rh: "50%",
+            pres: "1,007mBar",
+            wind_spd: "30 km/h",
+            sunrise_ts: "6:09 AM",
+            sunset_ts: "7:09 PM",
+            datetime: "Monday",
+            weather: {
+              description: "Broken clouds",
+            },
+            daytime: "13h 0m",
+          },
+          {
+            temp: "42",
+            max_temp: "44°C",
+            min_temp: "27°C",
+            rh: "50%",
+            pres: "1,007mBar",
+            wind_spd: "30 km/h",
+            sunrise_ts: "6:09 AM",
+            sunset_ts: "7:09 PM",
+            datetime: "Monday",
+            weather: {
+              description: "Broken clouds",
+            },
+            daytime: "13h 0m",
+          },
+          {
+            temp: "41",
+            max_temp: "44°C",
+            min_temp: "27°C",
+            rh: "50%",
+            pres: "1,007mBar",
+            wind_spd: "30 km/h",
+            sunrise_ts: "6:09 AM",
+            sunset_ts: "7:09 PM",
+            datetime: "Monday",
+            weather: {
+              description: "Broken clouds",
+            },
+            daytime: "13h 0m",
           },
         ],
       };
@@ -196,7 +234,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.wrapper img {
+.weather-bg {
   width: 100%;
   max-height: 300px;
   object-fit: cover;
@@ -207,10 +245,8 @@ export default {
 .weather {
   display: flex;
   flex-direction: column;
-
   position: relative;
   width: 100%;
-
   background-color: white;
   box-shadow: 0px -16px 40px rgba(0, 0, 0, 0.2);
   border-radius: 24px 24px 0 0;
@@ -234,7 +270,7 @@ export default {
 
   &__city {
     margin: 0 0 16px;
-    padding: 14px 42px 15px 27px;
+    padding: 14px 32px 15px 27px;
     font-size: 16px;
     font-weight: 500;
     line-height: 19px;
@@ -270,6 +306,7 @@ export default {
     align-items: center;
     margin: 0;
     padding-bottom: 5px;
+    max-width: 60px;
     font-size: 18px;
     font-weight: 500;
     line-height: 22px;
@@ -307,7 +344,7 @@ export default {
     }
   }
 
-  .weather-now-peak {
+  .weather-peaks {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -323,7 +360,7 @@ export default {
       line-height: 19px;
       color: #666666;
 
-      &--top::after {
+      &_top::after {
         position: absolute;
         content: "";
         top: 3px;
@@ -336,7 +373,7 @@ export default {
         background-position: center;
       }
 
-      &--down::after {
+      &_down::after {
         position: absolute;
         content: "";
         top: 8px;
@@ -355,7 +392,6 @@ export default {
   padding: 18px 10px 2px;
   margin: 0;
   list-style: none;
-
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -365,32 +401,30 @@ export default {
     flex-direction: column;
     align-items: center;
     position: relative;
-
     width: 33%;
     margin: 0 0 28px;
     letter-spacing: -0.05em;
 
-    &--sunrise,
-    &--sunset,
-    &--daytime {
+    &:nth-child(4),
+    &:nth-child(5),
+    &:last-child {
       margin-bottom: 0;
     }
+  }
+  &__icon {
+    padding-bottom: 10px;
+  }
 
-    &__svg {
-      padding-bottom: 10px;
-    }
+  &__text {
+    margin: 0;
+  }
 
-    &__text {
-      margin: 0;
-    }
-
-    &__subtitle {
-      padding: 5px 0 10px;
-      font-size: 8px;
-      line-height: 10px;
-      letter-spacing: 0.1em;
-      color: #999999;
-    }
+  &__subtitle {
+    padding: 5px 0 10px;
+    font-size: 8px;
+    line-height: 10px;
+    letter-spacing: 0.1em;
+    color: #999999;
   }
 }
 
@@ -398,7 +432,6 @@ export default {
   padding: 12px 20px 35px;
   margin: 0;
   list-style: none;
-
   display: inline-flex;
   overflow: auto;
 
@@ -406,11 +439,9 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-
     position: relative;
     padding: 14px 18px 10px;
     margin-right: 20px;
-
     font-weight: 500;
     font-size: 16px;
     line-height: 19px;
@@ -419,7 +450,7 @@ export default {
     box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
     border-radius: 16px;
 
-    &--thur::before {
+    &:last-child::before {
       position: absolute;
       content: "";
       right: -20px;
@@ -429,38 +460,36 @@ export default {
       background-repeat: no-repeat;
       background-position: center;
     }
+  }
 
-    &__title {
-      margin: 0;
+  &__title {
+    margin: 0;
+  }
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    width: 58px;
+    padding: 5px 0;
+    position: relative;
+  }
+
+  &__text {
+    display: flex;
+    align-items: center;
+    font-size: 8px;
+    line-height: 10px;
+    text-align: center;
+    letter-spacing: 0.1em;
+    color: #999999;
+  }
+
+  &__icon {
+    &_state {
+      padding: 0 0 10px;
     }
 
-    &__roll {
-      display: flex;
-      justify-content: space-between;
-
-      width: 58px;
-      padding: 5px 0;
-      position: relative;
-    }
-
-    &__text {
-      display: flex;
-      align-items: center;
-
-      font-size: 8px;
-      line-height: 10px;
-      text-align: center;
-      letter-spacing: 0.1em;
-      color: #999999;
-    }
-
-    &__svg {
-      &--state {
-        padding: 0 0 10px;
-      }
-
-      padding-left: 2px;
-    }
+    padding-left: 2px;
   }
 }
 </style>
