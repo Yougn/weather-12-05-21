@@ -9,115 +9,65 @@
       <div class="weather-now">
         <p class="weather-now__state">
           <span>
-            {{ weather.data[0].weather.description }}
+            {{ weather.items[0].weather.description }}
           </span>
           <span><SunIcon /></span>
         </p>
-        <p class="weather-now__temperature">{{ weather.data[0].temp }}</p>
+        <p class="weather-now__temperature">{{ weather.items[0].temp }}</p>
         <p class="weather-peaks">
           <span class="weather-peaks__item weather-peaks__item_top">
-            {{ weather.data[0].max_temp }}
+            {{ weather.items[0].max_temp }}
           </span>
           <span class="weather-peaks__item weather-peaks__item_down">
-            {{ weather.data[0].min_temp }}
+            {{ weather.items[0].min_temp }}
           </span>
         </p>
       </div>
       <ul class="weather-info">
-        <li class="weather-info__item">
-          <span class="weather-info__icon"><HumidityIcon /></span>
-          <p class="weather-info__text">{{ weather.data[0].rh }}</p>
-          <span class="weather-info__subtitle">Humidity</span>
-        </li>
+        <WeatherInfoItem :info="weather.items[0].rh" subtitle="Humidity">
+          <HumidityIcon />
+        </WeatherInfoItem>
         <li class="weather-info__item weather-info__item--pressure">
           <span class="weather-info__icon"><PressureIcon /></span>
-          <p class="weather-info__text">{{ weather.data[0].pres }}</p>
+          <p class="weather-info__text">{{ weather.items[0].pres }}</p>
           <span class="weather-info__subtitle">Pressure</span>
         </li>
         <li class="weather-info__item weather-info__item--wind">
           <span class="weather-info__icon"><WindIcon /></span>
-          <p class="weather-info__text">{{ weather.data[0].wind_spd }}</p>
+          <p class="weather-info__text">{{ weather.items[0].wind_spd }}</p>
           <span class="weather-info__subtitle">Wind</span>
         </li>
         <li class="weather-info__item weather-info__item--sunrise">
           <span class="weather-info__icon"><SunriseIcon /></span>
-          <p class="weather-info__text">{{ weather.data[0].sunrise_ts }}</p>
+          <p class="weather-info__text">{{ weather.items[0].sunrise_ts }}</p>
           <span class="weather-info__subtitle">Sunrise</span>
         </li>
         <li class="weather-info__item weather-info__item--sunset">
           <span class="weather-info__icon"><SunsetIcon /></span>
-          <p class="weather-info__text">{{ weather.data[0].sunset_ts }}</p>
+          <p class="weather-info__text">{{ weather.items[0].sunset_ts }}</p>
           <span class="weather-info__subtitle">Sunset</span>
         </li>
         <li class="weather-info__item weather-info__item--daytime">
           <span class="weather-info__item__svg"><DaytimeIcon /></span>
-          <p class="weather-info__text">{{ weather.data[0].daytime }}</p>
+          <p class="weather-info__text">{{ weather.items[0].daytime }}</p>
           <span class="weather-info__subtitle">Daytime</span>
         </li>
       </ul>
       <ul class="weather-week">
-        <li class="weather-week__item">
+        <li class="weather-week__item" v-for="item in items" v-bind:key="item">
           <span class="weather-week__icon weather-week__icon_state">
             <SmallSunIcon />
           </span>
           <p class="weather-week__title">
-            {{ weather.data[0].datetime }}
+            {{ item.datetime }}
           </p>
           <span class="weather-week__container">
             <span class="weather-week__text">
-              {{ weather.data[0].max_temp }}
+              {{ item.max_temp }}
               <span class="weather-week__icon"><ArrowupIcon /></span>
             </span>
             <span class="weather-week__text">
-              {{ weather.data[0].min_temp }}
-              <span class="weather-week__icon"><ArrowdownIcon /></span>
-            </span>
-          </span>
-        </li>
-        <li class="weather-week__item">
-          <span class="weather-week__icon weather-week__icon_state">
-            <SmallSunIcon />
-          </span>
-          <p class="weather-week__title">Tue, 22</p>
-          <span class="weather-week__container">
-            <span class="weather-week__text">
-              35°C
-              <span class="weather-week__icon"><ArrowupIcon /></span>
-            </span>
-            <span class="weather-week__text">
-              27°C
-              <span class="weather-week__icon"><ArrowdownIcon /></span>
-            </span>
-          </span>
-        </li>
-        <li class="weather-week__item">
-          <span class="weather-week__icon weather-week__icon_state">
-            <SmallSunIcon />
-          </span>
-          <p class="weather-week__title">Wed, 22</p>
-          <span class="weather-week__container">
-            <span class="weather-week__text">
-              35°C
-              <span class="weather-week__icon"><ArrowupIcon /></span>
-            </span>
-            <span class="weather-week__text">
-              29°C
-              <span class="weather-week__icon"><ArrowdownIcon /></span>
-            </span>
-          </span>
-        </li>
-        <li class="weather-week__item">
-          <span class="weather-week__icon weather-week__icon_state">
-            <SmallSunIcon />
-          </span>
-          <p class="weather-week__title">Thur, 22</p>
-          <span class="weather-week__container">
-            <span class="weather-week__text">
-              35°C
-              <span class="weather-week__icon"><ArrowupIcon /></span>
-            </span>
-            <span class="weather-week__text">
-              30°C
+              {{ item.min_temp }}
               <span class="weather-week__icon"><ArrowdownIcon /></span>
             </span>
           </span>
@@ -138,6 +88,7 @@ import ArrowupIcon from "../components/icons/ArrowupIcon";
 import ArrowdownIcon from "../components/icons/ArrowdownIcon";
 import SunIcon from "../components/icons/SunIcon";
 import SmallSunIcon from "../components/icons/SmallSunIcon";
+import WeatherInfoItem from "../components/WeatherInfoItem";
 export default {
   name: "Weather",
   components: {
@@ -151,10 +102,58 @@ export default {
     WindIcon,
     PressureIcon,
     HumidityIcon,
+    WeatherInfoItem,
   },
   data() {
     return {
       weather: null,
+      items: [
+        {
+          temp: "44",
+          max_temp: "44°C",
+          min_temp: "27°C",
+          rh: "50%",
+          pres: "1,007mBar",
+          wind_spd: "30 km/h",
+          sunrise_ts: "6:09 AM",
+          sunset_ts: "7:09 PM",
+          weather: {
+            description: "Broken clouds",
+          },
+          daytime: "13h 0m",
+          datetime: "Mon",
+        },
+        {
+          temp: "44",
+          max_temp: "44°C",
+          min_temp: "27°C",
+          rh: "50%",
+          pres: "1,007mBar",
+          wind_spd: "30 km/h",
+          sunrise_ts: "6:09 AM",
+          sunset_ts: "7:09 PM",
+          weather: {
+            description: "Broken clouds",
+          },
+          daytime: "13h 0m",
+          datetime: "Tue",
+        },
+        {
+          temp: "44",
+          max_temp: "44°C",
+          min_temp: "27°C",
+          rh: "50%",
+          pres: "1,007mBar",
+          wind_spd: "30 km/h",
+          sunrise_ts: "6:09 AM",
+          sunset_ts: "7:09 PM",
+          weather: {
+            description: "Broken clouds",
+          },
+          daytime: "13h 0m",
+          datetime: "Wed",
+        },
+      ],
     };
   },
   mounted() {
@@ -165,7 +164,7 @@ export default {
       this.weather = {
         date: "Friday, 15 May 2021 10:00AM",
         city_name: "Taganrog, Russia",
-        data: [
+        items: [
           {
             temp: "44",
             max_temp: "44°C",
@@ -175,14 +174,14 @@ export default {
             wind_spd: "30 km/h",
             sunrise_ts: "6:09 AM",
             sunset_ts: "7:09 PM",
-            datetime: "Monday",
             weather: {
               description: "Broken clouds",
             },
             daytime: "13h 0m",
+            datetime: "Mon",
           },
           {
-            temp: "43",
+            temp: "44",
             max_temp: "44°C",
             min_temp: "27°C",
             rh: "50%",
@@ -190,14 +189,14 @@ export default {
             wind_spd: "30 km/h",
             sunrise_ts: "6:09 AM",
             sunset_ts: "7:09 PM",
-            datetime: "Monday",
             weather: {
               description: "Broken clouds",
             },
             daytime: "13h 0m",
+            datetime: "Tue",
           },
           {
-            temp: "42",
+            temp: "44",
             max_temp: "44°C",
             min_temp: "27°C",
             rh: "50%",
@@ -205,26 +204,11 @@ export default {
             wind_spd: "30 km/h",
             sunrise_ts: "6:09 AM",
             sunset_ts: "7:09 PM",
-            datetime: "Monday",
             weather: {
               description: "Broken clouds",
             },
             daytime: "13h 0m",
-          },
-          {
-            temp: "41",
-            max_temp: "44°C",
-            min_temp: "27°C",
-            rh: "50%",
-            pres: "1,007mBar",
-            wind_spd: "30 km/h",
-            sunrise_ts: "6:09 AM",
-            sunset_ts: "7:09 PM",
-            datetime: "Monday",
-            weather: {
-              description: "Broken clouds",
-            },
-            daytime: "13h 0m",
+            datetime: "Wed",
           },
         ],
       };
