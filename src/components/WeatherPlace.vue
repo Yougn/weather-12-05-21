@@ -29,6 +29,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../assets/styles/variables.css";
 .weather-place {
   display: flex;
   justify-content: space-between;
@@ -40,7 +41,7 @@ export default {
     font-size: 14px;
     line-height: 17px;
     text-align: left;
-    color: #999999;
+    color: var(--grey);
   }
 
   &__city {
@@ -50,7 +51,7 @@ export default {
     font-weight: 500;
     line-height: 19px;
     text-align: center;
-    color: #0da0ea;
+    color: var(--blue);
     background: rgba(13, 159, 234, 0.08);
     border-radius: 0 0 0 25px;
   }

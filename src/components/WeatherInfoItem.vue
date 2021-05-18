@@ -17,6 +17,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../assets/styles/variables.css";
 .weather-info {
   &__item {
     display: flex;
@@ -46,7 +47,7 @@ export default {
     font-size: 8px;
     line-height: 10px;
     letter-spacing: 0.1em;
-    color: #999999;
+    color: var(--grey);
   }
 }
 </style>

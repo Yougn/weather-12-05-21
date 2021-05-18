@@ -33,6 +33,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../assets/styles/variables.css";
 .weather-now {
   display: flex;
   justify-content: space-between;
@@ -69,7 +70,7 @@ export default {
       font-weight: 500;
       font-size: 24px;
       line-height: 29px;
-      color: #666666;
+      color: var(--dark--grey);
     }
 
     &::before {
@@ -80,7 +81,7 @@ export default {
       font-weight: 500;
       font-size: 24px;
       line-height: 29px;
-      color: #666666;
+      color: var(--dark--grey);
     }
   }
 
@@ -98,7 +99,7 @@ export default {
       font-weight: 300;
       font-size: 16px;
       line-height: 19px;
-      color: #666666;
+      color: var(--dark--grey);
 
       &_top::after {
         position: absolute;

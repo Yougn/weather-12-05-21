@@ -35,7 +35,7 @@ body {
   font-style: normal;
   font-weight: normal;
   text-align: center;
-  color: #000000;
+  color: var(--black);
 }
 
 #nav {

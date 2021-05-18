@@ -74,6 +74,7 @@ import WeatherInfoItem from "../components/WeatherInfoItem";
 import WeatherPlace from "../components/WeatherPlace";
 import WeatherNow from "../components/WeatherNow";
 import Loader from "../components/Loader";
+import axios from "axios";
 
 export default {
   name: "Weather",
@@ -96,10 +97,12 @@ export default {
     return {
       weather: null,
       loading: false,
+      data: null,
     };
   },
   mounted() {
     this.getWeather();
+    this.getData();
   },
   methods: {
     getWeather() {
@@ -175,17 +178,29 @@ export default {
         this.loading = false;
       }, 2000);
     },
+    async getData() {
+      const url =
+        "https://api.weatherbit.io/v2.0/forecast/daily?lat=47.2362&lon=38.8969&days=7&key=43013e41df9f443290b1a400251307e7";
+      try {
+        let response = await axios.get(url);
+        this.data = response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+@import "../assets/styles/variables.css";
+
 .weather-bg {
   width: 100%;
   max-height: 300px;
   object-fit: cover;
   margin-bottom: -23px;
-  background-color: #8bccfb;
+  background-color: var(--bg--img);
 }
 
 .weather {
@@ -193,7 +208,7 @@ export default {
   flex-direction: column;
   position: relative;
   width: 100%;
-  background-color: white;
+  background-color: var(--white);
   box-shadow: 0px -16px 40px rgba(0, 0, 0, 0.2);
   border-radius: 24px 24px 0 0;
   overflow: hidden;
@@ -227,7 +242,7 @@ export default {
     font-size: 16px;
     line-height: 19px;
     letter-spacing: -0.05em;
-    background-color: white;
+    background-color: var(--white);
     box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
     border-radius: 16px;
 
@@ -262,7 +277,7 @@ export default {
     line-height: 10px;
     text-align: center;
     letter-spacing: 0.1em;
-    color: #999999;
+    color: var(--grey);
   }
 
   &__icon {
