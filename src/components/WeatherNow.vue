@@ -1,0 +1,130 @@
+<template>
+  <div class="weather-now">
+    <p class="weather-now__state">
+      <span>
+        {{ description }}
+      </span>
+      <span><SunsetIcon /></span>
+    </p>
+    <p class="weather-now__temperature">{{ temp }}</p>
+    <p class="weather-peaks">
+      <span class="weather-peaks__item weather-peaks__item_top">
+        {{ max_temp }}
+      </span>
+      <span class="weather-peaks__item weather-peaks__item_down">
+        {{ min_temp }}
+      </span>
+    </p>
+  </div>
+</template>
+
+<script>
+import SunsetIcon from "./icons/SunsetIcon";
+export default {
+  name: "WeatherNow",
+  components: { SunsetIcon },
+  props: {
+    description: { type: String, required: true },
+    temp: { type: Number, required: true },
+    max_temp: { type: Number, required: true },
+    min_temp: { type: Number, required: true },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.weather-now {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin: 0;
+  padding: 10px 48px 20px;
+
+  .weather-now__state {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    margin: 0;
+    padding-bottom: 5px;
+    max-width: 60px;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: -0.05em;
+  }
+
+  .weather-now__temperature {
+    position: relative;
+    margin: 0;
+    font-weight: 300;
+    font-size: 64px;
+    line-height: 77px;
+    letter-spacing: -0.05em;
+
+    &::after {
+      position: absolute;
+      content: "°";
+      top: 10px;
+      left: 65px;
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 29px;
+      color: #666666;
+    }
+
+    &::before {
+      position: absolute;
+      content: "C";
+      top: 10px;
+      left: 75px;
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 29px;
+      color: #666666;
+    }
+  }
+
+  .weather-peaks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin: 0;
+    padding: 0 5px 0;
+
+    &__item {
+      position: relative;
+      padding-bottom: 10px;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 19px;
+      color: #666666;
+
+      &_top::after {
+        position: absolute;
+        content: "";
+        top: 3px;
+        right: -10px;
+        width: 10px;
+        height: 10px;
+        background-image: url("../assets/arrow.svg");
+        transform: matrix(1, 0, 0, -1, 0, 0);
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      &_down::after {
+        position: absolute;
+        content: "";
+        top: 8px;
+        right: -10px;
+        width: 10px;
+        height: 10px;
+        background-image: url("../assets/arrow.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+    }
+  }
+}
+</style>

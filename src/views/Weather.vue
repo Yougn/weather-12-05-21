@@ -1,60 +1,43 @@
 <template>
-  <div>
+  <div v-if="loading">
+    <Loader />
+  </div>
+  <div v-else-if="weather">
     <img class="weather-bg" src="../assets/day.svg" alt="Street" />
     <div class="weather">
-      <div class="weather-place">
-        <p class="weather-place__date">{{ weather.date }}</p>
-        <p class="weather-place__city">{{ weather.city_name }}</p>
-      </div>
-      <div class="weather-now">
-        <p class="weather-now__state">
-          <span>
-            {{ weather.items[0].weather.description }}
-          </span>
-          <span><SunIcon /></span>
-        </p>
-        <p class="weather-now__temperature">{{ weather.items[0].temp }}</p>
-        <p class="weather-peaks">
-          <span class="weather-peaks__item weather-peaks__item_top">
-            {{ weather.items[0].max_temp }}
-          </span>
-          <span class="weather-peaks__item weather-peaks__item_down">
-            {{ weather.items[0].min_temp }}
-          </span>
-        </p>
-      </div>
+      <WeatherPlace :date="weather.date" :city="weather.city_name" />
+      <WeatherNow
+        :description="weather.items[0].weather.description"
+        :temp="weather.items[0].temp"
+        :max_temp="weather.items[0].max_temp"
+        :min_temp="weather.items[0].min_temp"
+      />
       <ul class="weather-info">
         <WeatherInfoItem :info="weather.items[0].rh" subtitle="Humidity">
           <HumidityIcon />
         </WeatherInfoItem>
-        <li class="weather-info__item weather-info__item--pressure">
-          <span class="weather-info__icon"><PressureIcon /></span>
-          <p class="weather-info__text">{{ weather.items[0].pres }}</p>
-          <span class="weather-info__subtitle">Pressure</span>
-        </li>
-        <li class="weather-info__item weather-info__item--wind">
-          <span class="weather-info__icon"><WindIcon /></span>
-          <p class="weather-info__text">{{ weather.items[0].wind_spd }}</p>
-          <span class="weather-info__subtitle">Wind</span>
-        </li>
-        <li class="weather-info__item weather-info__item--sunrise">
-          <span class="weather-info__icon"><SunriseIcon /></span>
-          <p class="weather-info__text">{{ weather.items[0].sunrise_ts }}</p>
-          <span class="weather-info__subtitle">Sunrise</span>
-        </li>
-        <li class="weather-info__item weather-info__item--sunset">
-          <span class="weather-info__icon"><SunsetIcon /></span>
-          <p class="weather-info__text">{{ weather.items[0].sunset_ts }}</p>
-          <span class="weather-info__subtitle">Sunset</span>
-        </li>
-        <li class="weather-info__item weather-info__item--daytime">
-          <span class="weather-info__item__svg"><DaytimeIcon /></span>
-          <p class="weather-info__text">{{ weather.items[0].daytime }}</p>
-          <span class="weather-info__subtitle">Daytime</span>
-        </li>
+        <WeatherInfoItem :info="weather.items[0].pres" subtitle="Pressure">
+          <PressureIcon />
+        </WeatherInfoItem>
+        <WeatherInfoItem :info="weather.items[0].wind_spd" subtitle="Wind">
+          <WindIcon />
+        </WeatherInfoItem>
+        <WeatherInfoItem :info="weather.items[0].sunrise_ts" subtitle="Sunrise">
+          <SunriseIcon />
+        </WeatherInfoItem>
+        <WeatherInfoItem :info="weather.items[0].sunset_ts" subtitle="Sunset">
+          <SunsetIcon />
+        </WeatherInfoItem>
+        <WeatherInfoItem :info="weather.items[0].daytime" subtitle="Daytime">
+          <DaytimeIcon />
+        </WeatherInfoItem>
       </ul>
       <ul class="weather-week">
-        <li class="weather-week__item" v-for="item in items" v-bind:key="item">
+        <li
+          class="weather-week__item"
+          v-for="(item, index) in weather.items"
+          v-bind:key="index"
+        >
           <span class="weather-week__icon weather-week__icon_state">
             <SmallSunIcon />
           </span>
@@ -86,14 +69,19 @@ import SunsetIcon from "../components/icons/SunsetIcon";
 import DaytimeIcon from "../components/icons/DaytimeIcon";
 import ArrowupIcon from "../components/icons/ArrowupIcon";
 import ArrowdownIcon from "../components/icons/ArrowdownIcon";
-import SunIcon from "../components/icons/SunIcon";
 import SmallSunIcon from "../components/icons/SmallSunIcon";
 import WeatherInfoItem from "../components/WeatherInfoItem";
+import WeatherPlace from "../components/WeatherPlace";
+import WeatherNow from "../components/WeatherNow";
+import Loader from "../components/Loader";
+
 export default {
   name: "Weather",
   components: {
+    Loader,
+    WeatherNow,
+    WeatherPlace,
     SmallSunIcon,
-    SunIcon,
     ArrowdownIcon,
     ArrowupIcon,
     DaytimeIcon,
@@ -107,53 +95,7 @@ export default {
   data() {
     return {
       weather: null,
-      items: [
-        {
-          temp: "44",
-          max_temp: "44°C",
-          min_temp: "27°C",
-          rh: "50%",
-          pres: "1,007mBar",
-          wind_spd: "30 km/h",
-          sunrise_ts: "6:09 AM",
-          sunset_ts: "7:09 PM",
-          weather: {
-            description: "Broken clouds",
-          },
-          daytime: "13h 0m",
-          datetime: "Mon",
-        },
-        {
-          temp: "44",
-          max_temp: "44°C",
-          min_temp: "27°C",
-          rh: "50%",
-          pres: "1,007mBar",
-          wind_spd: "30 km/h",
-          sunrise_ts: "6:09 AM",
-          sunset_ts: "7:09 PM",
-          weather: {
-            description: "Broken clouds",
-          },
-          daytime: "13h 0m",
-          datetime: "Tue",
-        },
-        {
-          temp: "44",
-          max_temp: "44°C",
-          min_temp: "27°C",
-          rh: "50%",
-          pres: "1,007mBar",
-          wind_spd: "30 km/h",
-          sunrise_ts: "6:09 AM",
-          sunset_ts: "7:09 PM",
-          weather: {
-            description: "Broken clouds",
-          },
-          daytime: "13h 0m",
-          datetime: "Wed",
-        },
-      ],
+      loading: false,
     };
   },
   mounted() {
@@ -161,9 +103,9 @@ export default {
   },
   methods: {
     getWeather() {
-      this.weather = {
+      const hardcodedWeather = {
         date: "Friday, 15 May 2021 10:00AM",
-        city_name: "Taganrog, Russia",
+        city_name: "Taganrog",
         items: [
           {
             temp: "44",
@@ -181,7 +123,7 @@ export default {
             datetime: "Mon",
           },
           {
-            temp: "44",
+            temp: "43",
             max_temp: "44°C",
             min_temp: "27°C",
             rh: "50%",
@@ -196,7 +138,22 @@ export default {
             datetime: "Tue",
           },
           {
-            temp: "44",
+            temp: "42",
+            max_temp: "44°C",
+            min_temp: "27°C",
+            rh: "50%",
+            pres: "1,007mBar",
+            wind_spd: "30 km/h",
+            sunrise_ts: "6:09 AM",
+            sunset_ts: "7:09 PM",
+            weather: {
+              description: "Broken clouds",
+            },
+            daytime: "13h 0m",
+            datetime: "Wed",
+          },
+          {
+            temp: "41",
             max_temp: "44°C",
             min_temp: "27°C",
             rh: "50%",
@@ -212,6 +169,11 @@ export default {
           },
         ],
       };
+      this.loading = true;
+      setTimeout(() => {
+        this.weather = hardcodedWeather;
+        this.loading = false;
+      }, 2000);
     },
   },
 };
@@ -238,140 +200,6 @@ export default {
   z-index: 2;
 }
 
-.weather-place {
-  display: flex;
-  justify-content: space-between;
-
-  &__date {
-    margin: 0;
-    max-width: 180px;
-    padding: 15px 20px;
-    font-size: 14px;
-    line-height: 17px;
-    text-align: left;
-    color: #999999;
-  }
-
-  &__city {
-    margin: 0 0 16px;
-    padding: 14px 32px 15px 27px;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 19px;
-    text-align: center;
-    color: #0da0ea;
-    background: rgba(13, 159, 234, 0.08);
-    border-radius: 0 0 0 25px;
-
-    &::after {
-      position: absolute;
-      content: "";
-      top: 18px;
-      right: 18px;
-      width: 12px;
-      height: 12px;
-      background-image: url("../assets/mark.svg");
-      background-repeat: no-repeat;
-      background-position: center;
-    }
-  }
-}
-
-.weather-now {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin: 0;
-  padding: 10px 48px 20px;
-
-  .weather-now__state {
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
-    margin: 0;
-    padding-bottom: 5px;
-    max-width: 60px;
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 22px;
-    letter-spacing: -0.05em;
-  }
-
-  .weather-now__temperature {
-    position: relative;
-    margin: 0;
-    font-weight: 300;
-    font-size: 64px;
-    line-height: 77px;
-    letter-spacing: -0.05em;
-
-    &::after {
-      position: absolute;
-      content: "°";
-      top: 10px;
-      left: 65px;
-      font-weight: 500;
-      font-size: 24px;
-      line-height: 29px;
-      color: #666666;
-    }
-
-    &::before {
-      position: absolute;
-      content: "C";
-      top: 10px;
-      left: 75px;
-      font-weight: 500;
-      font-size: 24px;
-      line-height: 29px;
-      color: #666666;
-    }
-  }
-
-  .weather-peaks {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    margin: 0;
-    padding: 0 5px 0;
-
-    &__item {
-      position: relative;
-      padding-bottom: 10px;
-      font-weight: 300;
-      font-size: 16px;
-      line-height: 19px;
-      color: #666666;
-
-      &_top::after {
-        position: absolute;
-        content: "";
-        top: 3px;
-        right: -10px;
-        width: 10px;
-        height: 10px;
-        background-image: url("../assets/arrow.svg");
-        transform: matrix(1, 0, 0, -1, 0, 0);
-        background-repeat: no-repeat;
-        background-position: center;
-      }
-
-      &_down::after {
-        position: absolute;
-        content: "";
-        top: 8px;
-        right: -10px;
-        width: 10px;
-        height: 10px;
-        background-image: url("../assets/arrow.svg");
-        background-repeat: no-repeat;
-        background-position: center;
-      }
-    }
-  }
-}
-
 .weather-info {
   padding: 18px 10px 2px;
   margin: 0;
@@ -379,37 +207,6 @@ export default {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-
-  &__item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    width: 33%;
-    margin: 0 0 28px;
-    letter-spacing: -0.05em;
-
-    &:nth-child(4),
-    &:nth-child(5),
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  &__icon {
-    padding-bottom: 10px;
-  }
-
-  &__text {
-    margin: 0;
-  }
-
-  &__subtitle {
-    padding: 5px 0 10px;
-    font-size: 8px;
-    line-height: 10px;
-    letter-spacing: 0.1em;
-    color: #999999;
-  }
 }
 
 .weather-week {

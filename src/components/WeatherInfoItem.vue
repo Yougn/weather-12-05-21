@@ -1,27 +1,23 @@
 <template>
-  <li class="weather-info__item weather-info__item--humidity">
-    <span class="weather-info__item__svg"><slot /></span>
-    <p class="weather-info__item__text">{{ info }}</p>
-    <span class="weather-info__item__subtitle">{{ subtitle }}</span>
+  <li class="weather-info__item">
+    <span class="weather-info__icon"><slot /></span>
+    <p class="weather-info__text">{{ info }}</p>
+    <span class="weather-info__subtitle">{{ subtitle }}</span>
   </li>
 </template>
 
 <script>
 export default {
   name: "WeatherInfoItem",
-  props: ['info', 'subtitle']
+  props: {
+    info: { type: Number, required: true },
+    subtitle: { type: String, required: true },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .weather-info {
-  padding: 18px 10px 2px;
-  margin: 0;
-  list-style: none;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-
   &__item {
     display: flex;
     flex-direction: column;
