@@ -4,7 +4,7 @@
       <span>
         {{ description }}
       </span>
-      <span><SunsetIcon /></span>
+      <span><SmallSunIcon /></span>
     </p>
     <h2 class="weather-now__temperature">{{ formattedTemp }}</h2>
     <p class="weather-peaks">
@@ -19,10 +19,10 @@
 </template>
 
 <script>
-import SunsetIcon from "../assets/icons/SunsetIcon";
+import SmallSunIcon from "../assets/icons/SmallSunIcon";
 export default {
   name: "WeatherNow",
-  components: { SunsetIcon },
+  components: { SmallSunIcon },
   props: {
     description: { type: String, required: true },
     temp: { type: Number, required: true },
