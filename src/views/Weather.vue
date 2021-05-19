@@ -42,7 +42,7 @@
             <SmallSunIcon />
           </span>
           <p class="weather-week__title big-txt">
-            {{ formattedDate }}
+            {{ formatDate(d.sunrise_ts) }}
           </p>
           <span class="weather-week__container">
             <span class="weather-week__text small-txt">
@@ -98,6 +98,7 @@ export default {
     return {
       weather: null,
       loading: false,
+      items: null,
     };
   },
   mounted() {
@@ -124,98 +125,29 @@ export default {
       );
     },
     formattedDaytime() {
-      return DateTime.fromSeconds(this.weather.data[0].sunset_ts * 2).toFormat(
-        "h mm"
-      );
-    },
-    formattedDate() {
-      return DateTime.fromSeconds(this.weather.data[0].sunset_ts).toFormat(
-        "ccc, dd"
-      );
+      const dateOne = DateTime.fromSeconds(this.weather.data[0].sunrise_ts);
+      const dateTwo = DateTime.fromSeconds(this.weather.data[0].sunset_ts);
+
+      const diff = dateTwo.diff(dateOne, ["hours", "minutes"]);
+
+      return diff.hours + `h ` + Math.round(diff.minutes) + "m";
     },
   },
   methods: {
-    // getWeather() {
-    //   const hardcodedWeather = {
-    //     city_name: "Taganrog",
-    //     items: [
-    //       {
-    //         temp: "44",
-    //         max_temp: "44°C",
-    //         min_temp: "27°C",
-    //         rh: "50%",
-    //         pres: "1,007mBar",
-    //         wind_spd: "30 km/h",
-    //         sunrise_ts: "6:09 AM",
-    //         sunset_ts: "7:09 PM",
-    //         weather: {
-    //           description: "Broken clouds",
-    //         },
-    //         daytime: "13h 0m",
-    //         datetime: "Mon",
-    //       },
-    //       {
-    //         temp: "43",
-    //         max_temp: "44°C",
-    //         min_temp: "27°C",
-    //         rh: "50%",
-    //         pres: "1,007mBar",
-    //         wind_spd: "30 km/h",
-    //         sunrise_ts: "6:09 AM",
-    //         sunset_ts: "7:09 PM",
-    //         weather: {
-    //           description: "Broken clouds",
-    //         },
-    //         daytime: "13h 0m",
-    //         datetime: "Tue",
-    //       },
-    //       {
-    //         temp: "42",
-    //         max_temp: "44°C",
-    //         min_temp: "27°C",
-    //         rh: "50%",
-    //         pres: "1,007mBar",
-    //         wind_spd: "30 km/h",
-    //         sunrise_ts: "6:09 AM",
-    //         sunset_ts: "7:09 PM",
-    //         weather: {
-    //           description: "Broken clouds",
-    //         },
-    //         daytime: "13h 0m",
-    //         datetime: "Wed",
-    //       },
-    //       {
-    //         temp: "41",
-    //         max_temp: "44°C",
-    //         min_temp: "27°C",
-    //         rh: "50%",
-    //         pres: "1,007mBar",
-    //         wind_spd: "30 km/h",
-    //         sunrise_ts: "6:09 AM",
-    //         sunset_ts: "7:09 PM",
-    //         weather: {
-    //           description: "Broken clouds",
-    //         },
-    //         daytime: "13h 0m",
-    //         datetime: "Wed",
-    //       },
-    //     ],
-    //   };
-    //   // this.loading = true;
-    //   // setTimeout(() => {
-    //   this.weather = hardcodedWeather;
-    //   this.loading = false;
-    //   // }, 2000);
-    // },
     async getWeather() {
+      this.loading = true;
       const url =
         "https://api.weatherbit.io/v2.0/forecast/daily?lat=47.2362&lon=38.8969&days=7&key=43013e41df9f443290b1a400251307e7";
       try {
         let response = await axios.get(url);
         this.weather = response.data;
+        this.loading = false;
       } catch (error) {
         console.log(error);
       }
+    },
+    formatDate(data) {
+      return DateTime.fromSeconds(data).toFormat("ccc, dd");
     },
   },
 };
