@@ -5,52 +5,52 @@
   <div v-else-if="weather">
     <img class="weather-bg" src="../assets/day.svg" alt="Street" />
     <div class="weather">
-      <WeatherPlace :date="weather.date" :city="weather.city_name" />
+      <WeatherPlace :city="weather.city_name" />
       <WeatherNow
-        :description="weather.items[0].weather.description"
-        :temp="weather.items[0].temp"
-        :max_temp="weather.items[0].max_temp"
-        :min_temp="weather.items[0].min_temp"
+        :description="weather.data[0].weather.description"
+        :temp="weather.data[0].temp"
+        :max_temp="weather.data[0].max_temp"
+        :min_temp="weather.data[0].min_temp"
       />
       <ul class="weather-info">
-        <WeatherInfoItem :info="weather.items[0].rh" subtitle="Humidity">
+        <WeatherInfoItem :info="formattedHumidity" subtitle="Humidity">
           <HumidityIcon />
         </WeatherInfoItem>
-        <WeatherInfoItem :info="weather.items[0].pres" subtitle="Pressure">
+        <WeatherInfoItem :info="formattedPressure" subtitle="Pressure">
           <PressureIcon />
         </WeatherInfoItem>
-        <WeatherInfoItem :info="weather.items[0].wind_spd" subtitle="Wind">
+        <WeatherInfoItem :info="formattedWind" subtitle="Wind">
           <WindIcon />
         </WeatherInfoItem>
-        <WeatherInfoItem :info="weather.items[0].sunrise_ts" subtitle="Sunrise">
+        <WeatherInfoItem :info="formattedSunrise" subtitle="Sunrise">
           <SunriseIcon />
         </WeatherInfoItem>
-        <WeatherInfoItem :info="weather.items[0].sunset_ts" subtitle="Sunset">
+        <WeatherInfoItem :info="formattedSunset" subtitle="Sunset">
           <SunsetIcon />
         </WeatherInfoItem>
-        <WeatherInfoItem :info="weather.items[0].daytime" subtitle="Daytime">
+        <WeatherInfoItem :info="formattedDaytime" subtitle="Daytime">
           <DaytimeIcon />
         </WeatherInfoItem>
       </ul>
       <ul class="weather-week">
         <li
           class="weather-week__item"
-          v-for="(item, index) in weather.items"
+          v-for="(d, index) in weather.data"
           v-bind:key="index"
         >
           <span class="weather-week__icon weather-week__icon_state">
             <SmallSunIcon />
           </span>
           <p class="weather-week__title big-txt">
-            {{ item.datetime }}
+            {{ formattedDate }}
           </p>
           <span class="weather-week__container">
             <span class="weather-week__text small-txt">
-              {{ item.max_temp }}
+              {{ d.max_temp }}
               <span class="weather-week__icon"><ArrowupIcon /></span>
             </span>
             <span class="weather-week__text small-txt">
-              {{ item.min_temp }}
+              {{ d.min_temp }}
               <span class="weather-week__icon"><ArrowdownIcon /></span>
             </span>
           </span>
@@ -75,6 +75,7 @@ import WeatherPlace from "../components/WeatherPlace";
 import WeatherNow from "../components/WeatherNow";
 import Loader from "../components/Loader";
 import axios from "axios";
+import { DateTime } from "luxon";
 
 export default {
   name: "Weather",
@@ -97,93 +98,121 @@ export default {
     return {
       weather: null,
       loading: false,
-      data: null,
     };
   },
   mounted() {
     this.getWeather();
-    this.getData();
+  },
+  computed: {
+    formattedHumidity() {
+      return this.weather.data[0].rh + `%`;
+    },
+    formattedPressure() {
+      return this.weather.data[0].pres.toFixed(1) + `mBar`;
+    },
+    formattedWind() {
+      return this.weather.data[0].wind_spd.toFixed(1) + ` km/h`;
+    },
+    formattedSunrise() {
+      return DateTime.fromSeconds(this.weather.data[0].sunrise_ts).toFormat(
+        "h:mm a"
+      );
+    },
+    formattedSunset() {
+      return DateTime.fromSeconds(this.weather.data[0].sunset_ts).toFormat(
+        "h:mm a"
+      );
+    },
+    formattedDaytime() {
+      return DateTime.fromSeconds(this.weather.data[0].sunset_ts * 2).toFormat(
+        "h mm"
+      );
+    },
+    formattedDate() {
+      return DateTime.fromSeconds(this.weather.data[0].sunset_ts).toFormat(
+        "ccc, dd"
+      );
+    },
   },
   methods: {
-    getWeather() {
-      const hardcodedWeather = {
-        date: "Friday, 15 May 2021 10:00AM",
-        city_name: "Taganrog",
-        items: [
-          {
-            temp: "44",
-            max_temp: "44°C",
-            min_temp: "27°C",
-            rh: "50%",
-            pres: "1,007mBar",
-            wind_spd: "30 km/h",
-            sunrise_ts: "6:09 AM",
-            sunset_ts: "7:09 PM",
-            weather: {
-              description: "Broken clouds",
-            },
-            daytime: "13h 0m",
-            datetime: "Mon",
-          },
-          {
-            temp: "43",
-            max_temp: "44°C",
-            min_temp: "27°C",
-            rh: "50%",
-            pres: "1,007mBar",
-            wind_spd: "30 km/h",
-            sunrise_ts: "6:09 AM",
-            sunset_ts: "7:09 PM",
-            weather: {
-              description: "Broken clouds",
-            },
-            daytime: "13h 0m",
-            datetime: "Tue",
-          },
-          {
-            temp: "42",
-            max_temp: "44°C",
-            min_temp: "27°C",
-            rh: "50%",
-            pres: "1,007mBar",
-            wind_spd: "30 km/h",
-            sunrise_ts: "6:09 AM",
-            sunset_ts: "7:09 PM",
-            weather: {
-              description: "Broken clouds",
-            },
-            daytime: "13h 0m",
-            datetime: "Wed",
-          },
-          {
-            temp: "41",
-            max_temp: "44°C",
-            min_temp: "27°C",
-            rh: "50%",
-            pres: "1,007mBar",
-            wind_spd: "30 km/h",
-            sunrise_ts: "6:09 AM",
-            sunset_ts: "7:09 PM",
-            weather: {
-              description: "Broken clouds",
-            },
-            daytime: "13h 0m",
-            datetime: "Wed",
-          },
-        ],
-      };
-      this.loading = true;
-      setTimeout(() => {
-        this.weather = hardcodedWeather;
-        this.loading = false;
-      }, 2000);
-    },
-    async getData() {
+    // getWeather() {
+    //   const hardcodedWeather = {
+    //     city_name: "Taganrog",
+    //     items: [
+    //       {
+    //         temp: "44",
+    //         max_temp: "44°C",
+    //         min_temp: "27°C",
+    //         rh: "50%",
+    //         pres: "1,007mBar",
+    //         wind_spd: "30 km/h",
+    //         sunrise_ts: "6:09 AM",
+    //         sunset_ts: "7:09 PM",
+    //         weather: {
+    //           description: "Broken clouds",
+    //         },
+    //         daytime: "13h 0m",
+    //         datetime: "Mon",
+    //       },
+    //       {
+    //         temp: "43",
+    //         max_temp: "44°C",
+    //         min_temp: "27°C",
+    //         rh: "50%",
+    //         pres: "1,007mBar",
+    //         wind_spd: "30 km/h",
+    //         sunrise_ts: "6:09 AM",
+    //         sunset_ts: "7:09 PM",
+    //         weather: {
+    //           description: "Broken clouds",
+    //         },
+    //         daytime: "13h 0m",
+    //         datetime: "Tue",
+    //       },
+    //       {
+    //         temp: "42",
+    //         max_temp: "44°C",
+    //         min_temp: "27°C",
+    //         rh: "50%",
+    //         pres: "1,007mBar",
+    //         wind_spd: "30 km/h",
+    //         sunrise_ts: "6:09 AM",
+    //         sunset_ts: "7:09 PM",
+    //         weather: {
+    //           description: "Broken clouds",
+    //         },
+    //         daytime: "13h 0m",
+    //         datetime: "Wed",
+    //       },
+    //       {
+    //         temp: "41",
+    //         max_temp: "44°C",
+    //         min_temp: "27°C",
+    //         rh: "50%",
+    //         pres: "1,007mBar",
+    //         wind_spd: "30 km/h",
+    //         sunrise_ts: "6:09 AM",
+    //         sunset_ts: "7:09 PM",
+    //         weather: {
+    //           description: "Broken clouds",
+    //         },
+    //         daytime: "13h 0m",
+    //         datetime: "Wed",
+    //       },
+    //     ],
+    //   };
+    //   // this.loading = true;
+    //   // setTimeout(() => {
+    //   this.weather = hardcodedWeather;
+    //   this.loading = false;
+    //   // }, 2000);
+    // },
+    async getWeather() {
       const url =
         "https://api.weatherbit.io/v2.0/forecast/daily?lat=47.2362&lon=38.8969&days=7&key=43013e41df9f443290b1a400251307e7";
       try {
         let response = await axios.get(url);
-        this.data = response.data;
+        this.weather = response.data;
       } catch (error) {
         console.log(error);
       }
@@ -276,7 +305,6 @@ export default {
     &_state {
       padding: 0 0 10px;
     }
-
     padding-left: 2px;
   }
 }

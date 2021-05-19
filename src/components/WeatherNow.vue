@@ -6,13 +6,13 @@
       </span>
       <span><SunsetIcon /></span>
     </p>
-    <h2 class="weather-now__temperature">{{ temp }}</h2>
+    <h2 class="weather-now__temperature">{{ formattedTemp }}</h2>
     <p class="weather-peaks">
       <span class="weather-peaks__item weather-peaks__item_top">
-        {{ max_temp }}
+        {{ max_temp }} °C
       </span>
       <span class="weather-peaks__item weather-peaks__item_down">
-        {{ min_temp }}
+        {{ min_temp }} °C
       </span>
     </p>
   </div>
@@ -28,6 +28,11 @@ export default {
     temp: { type: Number, required: true },
     max_temp: { type: Number, required: true },
     min_temp: { type: Number, required: true },
+  },
+  computed: {
+    formattedTemp() {
+      return Math.round(this.temp);
+    },
   },
 };
 </script>
@@ -62,7 +67,7 @@ export default {
       position: absolute;
       content: "°";
       top: 10px;
-      left: 65px;
+      left: 55px;
       font-weight: 500;
       font-size: 24px;
       line-height: 29px;
@@ -73,7 +78,7 @@ export default {
       position: absolute;
       content: "C";
       top: 10px;
-      left: 75px;
+      left: 65px;
       font-weight: 500;
       font-size: 24px;
       line-height: 29px;

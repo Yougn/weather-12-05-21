@@ -10,7 +10,7 @@
 export default {
   name: "WeatherInfoItem",
   props: {
-    info: { type: Number, required: true },
+    info: { required: true },
     subtitle: { type: String, required: true },
   },
 };
