@@ -5,7 +5,7 @@
   <div v-else-if="weather">
     <img class="weather-bg" src="../assets/day.svg" alt="Street" />
     <div class="weather">
-      <WeatherPlace :city="weather.city_name" />
+      <WeatherPlace :city="WEATHER.city_name" />
       <WeatherNow
         :description="weather.data[0].weather.description"
         :temp="weather.data[0].temp"
@@ -76,6 +76,7 @@ import WeatherNow from "../components/WeatherNow";
 import Loader from "../components/Loader";
 import axios from "axios";
 import { DateTime } from "luxon";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: "Weather",
@@ -98,13 +99,16 @@ export default {
     return {
       weather: null,
       loading: false,
-      items: null,
     };
   },
   mounted() {
     this.getWeather();
+    this.GET_WEATHER_FROM_API();
   },
   computed: {
+    ...mapGetters([
+      "WEATHER"
+    ]),
     formattedHumidity() {
       return this.weather.data[0].rh + `%`;
     },
@@ -134,6 +138,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions([
+      "GET_WEATHER_FROM_API"
+      ]),
     async getWeather() {
       this.loading = true;
       const url =
