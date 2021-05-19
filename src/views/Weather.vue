@@ -41,15 +41,15 @@
           <span class="weather-week__icon weather-week__icon_state">
             <SmallSunIcon />
           </span>
-          <p class="weather-week__title">
+          <p class="weather-week__title big-txt">
             {{ item.datetime }}
           </p>
           <span class="weather-week__container">
-            <span class="weather-week__text">
+            <span class="weather-week__text small-txt">
               {{ item.max_temp }}
               <span class="weather-week__icon"><ArrowupIcon /></span>
             </span>
-            <span class="weather-week__text">
+            <span class="weather-week__text small-txt">
               {{ item.min_temp }}
               <span class="weather-week__icon"><ArrowdownIcon /></span>
             </span>
@@ -61,15 +61,15 @@
 </template>
 
 <script>
-import HumidityIcon from "../components/icons/HumidityIcon";
-import PressureIcon from "../components/icons/PressureIcon";
-import WindIcon from "../components/icons/WindIcon";
-import SunriseIcon from "../components/icons/SunriseIcon";
-import SunsetIcon from "../components/icons/SunsetIcon";
-import DaytimeIcon from "../components/icons/DaytimeIcon";
-import ArrowupIcon from "../components/icons/ArrowupIcon";
-import ArrowdownIcon from "../components/icons/ArrowdownIcon";
-import SmallSunIcon from "../components/icons/SmallSunIcon";
+import HumidityIcon from "../assets/icons/HumidityIcon";
+import PressureIcon from "../assets/icons/PressureIcon";
+import WindIcon from "../assets/icons/WindIcon";
+import SunriseIcon from "../assets/icons/SunriseIcon";
+import SunsetIcon from "../assets/icons/SunsetIcon";
+import DaytimeIcon from "../assets/icons/DaytimeIcon";
+import ArrowupIcon from "../assets/icons/ArrowupIcon";
+import ArrowdownIcon from "../assets/icons/ArrowdownIcon";
+import SmallSunIcon from "../assets/icons/SmallSunIcon";
 import WeatherInfoItem from "../components/WeatherInfoItem";
 import WeatherPlace from "../components/WeatherPlace";
 import WeatherNow from "../components/WeatherNow";
@@ -194,7 +194,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../assets/styles/variables.css";
-
+@import "../assets/styles/typography.css";
 .weather-bg {
   width: 100%;
   max-height: 300px;
@@ -238,10 +238,6 @@ export default {
     position: relative;
     padding: 14px 18px 10px;
     margin-right: 20px;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 19px;
-    letter-spacing: -0.05em;
     background-color: var(--white);
     box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
     border-radius: 16px;
@@ -273,10 +269,6 @@ export default {
   &__text {
     display: flex;
     align-items: center;
-    font-size: 8px;
-    line-height: 10px;
-    text-align: center;
-    letter-spacing: 0.1em;
     color: var(--grey);
   }
 

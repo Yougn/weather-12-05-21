@@ -6,7 +6,7 @@
       </span>
       <span><SunsetIcon /></span>
     </p>
-    <p class="weather-now__temperature">{{ temp }}</p>
+    <h2 class="weather-now__temperature">{{ temp }}</h2>
     <p class="weather-peaks">
       <span class="weather-peaks__item weather-peaks__item_top">
         {{ max_temp }}
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import SunsetIcon from "./icons/SunsetIcon";
+import SunsetIcon from "../assets/icons/SunsetIcon";
 export default {
   name: "WeatherNow",
   components: { SunsetIcon },
@@ -57,10 +57,6 @@ export default {
   .weather-now__temperature {
     position: relative;
     margin: 0;
-    font-weight: 300;
-    font-size: 64px;
-    line-height: 77px;
-    letter-spacing: -0.05em;
 
     &::after {
       position: absolute;

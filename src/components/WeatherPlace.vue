@@ -1,6 +1,6 @@
 <template>
   <div class="weather-place">
-    <p class="weather-place__date">{{ date }}</p>
+    <p class="weather-place__date">{{ formattedDate }}</p>
     <p class="weather-place__city">
       {{ city }}, Russia <span class="weather-place__icon"><MarkIcon /></span>
     </p>
@@ -8,10 +8,9 @@
 </template>
 
 <script>
-// TODO ES: use luxon.js https://moment.github.io/luxon/
-// import dayjs from "dayjs";
+import { DateTime } from "luxon";
 
-import MarkIcon from "./icons/MarkIcon";
+import MarkIcon from "../assets/icons/MarkIcon";
 export default {
   name: "WeatherPlace",
   components: { MarkIcon },
@@ -20,10 +19,9 @@ export default {
     city: { type: String, required: true },
   },
   computed: {
-    // TODO ES:
-    // formattedDate() {
-    //   return dayjs.unix(this.date);
-    // },
+    formattedDate() {
+      return DateTime.now().toFormat("ccc, dd LLL yyyy hh:mma");
+    },
   },
 };
 </script>
