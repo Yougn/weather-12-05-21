@@ -10,7 +10,7 @@
 <script>
 import { DateTime } from "luxon";
 
-import MarkIcon from "../assets/icons/MarkIcon";
+import MarkIcon from "./icons/MarkIcon";
 export default {
   name: "WeatherPlace",
   components: { MarkIcon },
@@ -38,7 +38,7 @@ export default {
     font-size: 14px;
     line-height: 17px;
     text-align: left;
-    color: var(--grey);
+    color: var(--color-grey);
   }
 
   &__city {
@@ -48,7 +48,7 @@ export default {
     font-weight: 500;
     line-height: 19px;
     text-align: center;
-    color: var(--blue);
+    color: var(--color-blue);
     background: rgba(13, 159, 234, 0.08);
     border-radius: 0 0 0 25px;
   }
