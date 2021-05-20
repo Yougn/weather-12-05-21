@@ -7,7 +7,15 @@
     <PageNotFound />
   </div>
   <div v-else-if="weather">
-    <img class="weather-bg" src="../assets/day.svg" alt="Street" />
+    <img
+      class="weather-bg"
+      :src="
+        getCurrentPeriod
+          ? require(`../assets/day.svg`)
+          : require(`../assets/night.svg`)
+      "
+      alt="Street"
+    />
     <div class="weather">
       <WeatherPlace :city="WEATHER.city_name" />
       <WeatherNow
@@ -81,7 +89,7 @@ import Loader from "../components/Loader";
 import axios from "axios";
 import { DateTime } from "luxon";
 import PageNotFound from "../components/PageNotFound";
-import {mapActions, mapGetters} from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Weather",
@@ -106,7 +114,6 @@ export default {
       weather: null,
       loading: false,
       error: null,
-
     };
   },
   mounted() {
@@ -114,9 +121,7 @@ export default {
     this.GET_WEATHER_FROM_API();
   },
   computed: {
-    ...mapGetters([
-      "WEATHER"
-    ]),
+    ...mapGetters(["WEATHER"]),
     formattedHumidity() {
       return this.weather.data[0].rh + `%`;
     },
@@ -144,11 +149,19 @@ export default {
 
       return diff.hours + `h ` + Math.round(diff.minutes) + "m";
     },
+    getCurrentPeriod() {
+      const start = 6;
+      const finish = 18;
+      const currentHour = DateTime.now().toFormat("HH");
+      if (currentHour >= start && currentHour <= finish) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   methods: {
-    ...mapActions([
-      "GET_WEATHER_FROM_API"
-      ]),
+    ...mapActions(["GET_WEATHER_FROM_API"]),
     async getWeather() {
       this.loading = true;
       const url = `https://api.weatherbit.io/v2.0/forecast/daily`;

@@ -4,6 +4,7 @@
       <span>
         {{ description }}
       </span>
+      <!--      <components :is="" />-->
       <span><SmallSunIcon /></span>
     </p>
     <h2 class="weather-now__temperature">{{ formattedTemp }}</h2>
