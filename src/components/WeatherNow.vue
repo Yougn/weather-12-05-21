@@ -9,25 +9,26 @@
     <h2 class="weather-now__temperature">{{ formattedTemp }}</h2>
     <p class="weather-peaks">
       <span class="weather-peaks__item weather-peaks__item_top">
-        {{ max_temp }} °C
+        {{ maxTemp }} °C
       </span>
       <span class="weather-peaks__item weather-peaks__item_down">
-        {{ min_temp }} °C
+        {{ minTemp }} °C
       </span>
     </p>
   </div>
 </template>
 
 <script>
-import SmallSunIcon from "../assets/icons/SmallSunIcon";
+import SmallSunIcon from "./icons/SmallSunIcon";
+
 export default {
   name: "WeatherNow",
   components: { SmallSunIcon },
   props: {
     description: { type: String, required: true },
     temp: { type: Number, required: true },
-    max_temp: { type: Number, required: true },
-    min_temp: { type: Number, required: true },
+    maxTemp: { type: Number, required: true },
+    minTemp: { type: Number, required: true },
   },
   computed: {
     formattedTemp() {
@@ -46,7 +47,7 @@ export default {
   margin: 0;
   padding: 10px 48px 20px;
 
-  .weather-now__state {
+  &__state {
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
@@ -59,7 +60,7 @@ export default {
     letter-spacing: -0.05em;
   }
 
-  .weather-now__temperature {
+  &__temperature {
     position: relative;
     margin: 0;
 
@@ -67,11 +68,11 @@ export default {
       position: absolute;
       content: "°";
       top: 10px;
-      left: 55px;
+      left: 57px;
       font-weight: 500;
       font-size: 24px;
       line-height: 29px;
-      color: var(--dark--grey);
+      color: var(--color-dark-grey);
     }
 
     &::before {
@@ -82,7 +83,7 @@ export default {
       font-weight: 500;
       font-size: 24px;
       line-height: 29px;
-      color: var(--dark--grey);
+      color: var(--color-dark-grey);
     }
   }
 
@@ -100,7 +101,7 @@ export default {
       font-weight: 300;
       font-size: 16px;
       line-height: 19px;
-      color: var(--dark--grey);
+      color: var(--color-dark-grey);
 
       &_top::after {
         position: absolute;

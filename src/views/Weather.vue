@@ -2,6 +2,10 @@
   <div v-if="loading">
     <Loader />
   </div>
+  <div v-else-if="error">
+    <img class="weather-bg" src="../assets/day.svg" alt="Street" />
+    <PageNotFound />
+  </div>
   <div v-else-if="weather">
     <img class="weather-bg" src="../assets/day.svg" alt="Street" />
     <div class="weather">
@@ -9,8 +13,8 @@
       <WeatherNow
         :description="weather.data[0].weather.description"
         :temp="weather.data[0].temp"
-        :max_temp="weather.data[0].max_temp"
-        :min_temp="weather.data[0].min_temp"
+        :maxTemp="weather.data[0].max_temp"
+        :minTemp="weather.data[0].min_temp"
       />
       <ul class="weather-info">
         <WeatherInfoItem :info="formattedHumidity" subtitle="Humidity">
@@ -61,25 +65,27 @@
 </template>
 
 <script>
-import HumidityIcon from "../assets/icons/HumidityIcon";
-import PressureIcon from "../assets/icons/PressureIcon";
-import WindIcon from "../assets/icons/WindIcon";
-import SunriseIcon from "../assets/icons/SunriseIcon";
-import SunsetIcon from "../assets/icons/SunsetIcon";
-import DaytimeIcon from "../assets/icons/DaytimeIcon";
-import ArrowupIcon from "../assets/icons/ArrowupIcon";
-import ArrowdownIcon from "../assets/icons/ArrowdownIcon";
-import SmallSunIcon from "../assets/icons/SmallSunIcon";
+import HumidityIcon from "../components/icons/HumidityIcon";
+import PressureIcon from "../components/icons/PressureIcon";
+import WindIcon from "../components/icons/WindIcon";
+import SunriseIcon from "../components/icons/SunriseIcon";
+import SunsetIcon from "../components/icons/SunsetIcon";
+import DaytimeIcon from "../components/icons/DaytimeIcon";
+import ArrowupIcon from "../components/icons/ArrowupIcon";
+import ArrowdownIcon from "../components/icons/ArrowdownIcon";
+import SmallSunIcon from "../components/icons/SmallSunIcon";
 import WeatherInfoItem from "../components/WeatherInfoItem";
 import WeatherPlace from "../components/WeatherPlace";
 import WeatherNow from "../components/WeatherNow";
 import Loader from "../components/Loader";
 import axios from "axios";
 import { DateTime } from "luxon";
+import PageNotFound from "../components/PageNotFound";
 
 export default {
   name: "Weather",
   components: {
+    PageNotFound,
     Loader,
     WeatherNow,
     WeatherPlace,
@@ -98,7 +104,7 @@ export default {
     return {
       weather: null,
       loading: false,
-      items: null,
+      error: null,
     };
   },
   mounted() {
@@ -136,32 +142,40 @@ export default {
   methods: {
     async getWeather() {
       this.loading = true;
-      const url =
-        "https://api.weatherbit.io/v2.0/forecast/daily?lat=47.2362&lon=38.8969&days=7&key=43013e41df9f443290b1a400251307e7";
+      const url = `https://api.weatherbit.io/v2.0/forecast/daily`;
       try {
-        let response = await axios.get(url);
+        const response = await axios.get(url, {
+          params: {
+            lat: "47.2362",
+            lon: "38.8969",
+            days: 7,
+            key: process.env.VUE_APP_WEATHER_API_KEY,
+          },
+        });
         this.weather = response.data;
-        this.loading = false;
       } catch (error) {
-        console.log(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
       }
     },
-    formatDate(data) {
-      return DateTime.fromSeconds(data).toFormat("ccc, dd");
+    formatDate(date) {
+      return DateTime.fromSeconds(date).toFormat("ccc, dd");
     },
   },
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 @import "../assets/styles/variables.css";
 @import "../assets/styles/typography.css";
+
 .weather-bg {
   width: 100%;
   max-height: 300px;
   object-fit: cover;
   margin-bottom: -23px;
-  background-color: var(--bg--img);
+  background-color: var(--bg-img);
 }
 
 .weather {
@@ -169,7 +183,7 @@ export default {
   flex-direction: column;
   position: relative;
   width: 100%;
-  background-color: var(--white);
+  background-color: var(--color-white);
   box-shadow: 0px -16px 40px rgba(0, 0, 0, 0.2);
   border-radius: 24px 24px 0 0;
   overflow: hidden;
@@ -199,8 +213,8 @@ export default {
     position: relative;
     padding: 14px 18px 10px;
     margin-right: 20px;
-    background-color: var(--white);
-    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
+    background-color: var(--color-white);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     border-radius: 16px;
 
     &:last-child::before {
@@ -230,7 +244,7 @@ export default {
   &__text {
     display: flex;
     align-items: center;
-    color: var(--grey);
+    color: var(--color-grey);
   }
 
   &__icon {

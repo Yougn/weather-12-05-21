@@ -17,6 +17,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// TODO ES: find a way to import .scss
 @import "../assets/styles/variables.css";
 @import "../assets/styles/typography.css";
 .weather-info {
@@ -44,7 +45,7 @@ export default {
 
   &__subtitle {
     padding: 5px 0 10px;
-    color: var(--grey);
+    color: var(--color-grey);
   }
 }
 </style>
