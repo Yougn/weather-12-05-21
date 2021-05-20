@@ -9,7 +9,7 @@
   <div v-else-if="weather">
     <img class="weather-bg" src="../assets/day.svg" alt="Street" />
     <div class="weather">
-      <WeatherPlace :city="weather.city_name" />
+      <WeatherPlace :city="WEATHER.city_name" />
       <WeatherNow
         :description="weather.data[0].weather.description"
         :temp="weather.data[0].temp"
@@ -81,6 +81,7 @@ import Loader from "../components/Loader";
 import axios from "axios";
 import { DateTime } from "luxon";
 import PageNotFound from "../components/PageNotFound";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: "Weather",
@@ -105,12 +106,17 @@ export default {
       weather: null,
       loading: false,
       error: null,
+
     };
   },
   mounted() {
     this.getWeather();
+    this.GET_WEATHER_FROM_API();
   },
   computed: {
+    ...mapGetters([
+      "WEATHER"
+    ]),
     formattedHumidity() {
       return this.weather.data[0].rh + `%`;
     },
@@ -140,6 +146,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions([
+      "GET_WEATHER_FROM_API"
+      ]),
     async getWeather() {
       this.loading = true;
       const url = `https://api.weatherbit.io/v2.0/forecast/daily`;
