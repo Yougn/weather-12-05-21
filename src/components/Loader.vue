@@ -1,8 +1,6 @@
 <template>
-  <div class="spinner">
-    <span class="spinner-inner-1"></span>
-    <span class="spinner-inner-2"></span>
-    <span class="spinner-inner-3"></span>
+  <div class="wrapper">
+    <div class="loader-circle"></div>
   </div>
 </template>
 
@@ -13,61 +11,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$spinner: salmon;
-$background: white;
-$size: 30px;
-
-html {
-  background-color: $background;
+.wrapper {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  background-color: #0da0ea;
 }
-
-.spinner {
-  position: absolute;
-  top: calc(50% - #{$size / 2});
-  left: calc(50% - #{$size / 2});
-  width: $size;
-  height: $size;
-  animation: spinner 0.75s linear infinite;
-
-  span {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-  }
-
-  .spinner-inner-1 {
-    background: linear-gradient(
-      to right,
-      rgba($spinner, 0) 0%,
-      rgba($spinner, 0) 50%,
-      $spinner 51%
-    );
-  }
-
-  .spinner-inner-2 {
-    background: linear-gradient(
-      to top,
-      rgba($background, 0) 0%,
-      $background 100%
-    );
-  }
-
-  .spinner-inner-3 {
-    $offset: $size * 0.1;
-    top: $offset;
-    left: $offset;
-    width: $size - ($offset * 2);
-    height: $size - ($offset * 2);
-    background: $background;
-  }
+.loader-circle {
+  width: 80px;
+  height: 80px;
+  border: 15px solid;
+  border-color: #e6af2e #1b998b;
+  border-radius: 50%;
+  animation: spin 1.5s infinite;
 }
-
-@keyframes spinner {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
+@keyframes spin {
+  to {
     transform: rotate(360deg);
   }
 }

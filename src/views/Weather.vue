@@ -17,27 +17,28 @@
       alt="Street"
     />
     <div class="weather">
-      <WeatherPlace :city="WEATHER.city_name" />
+      <WeatherPlace :city="weather.city_name" />
       <WeatherNow
         :description="weather.data[0].weather.description"
+        :isDay="getCurrentPeriod"
         :temp="weather.data[0].temp"
         :maxTemp="weather.data[0].max_temp"
         :minTemp="weather.data[0].min_temp"
       />
       <ul class="weather-info">
-        <WeatherInfoItem :info="formattedHumidity" subtitle="Humidity">
+        <WeatherInfoItem :info="formattedValue.humidity" subtitle="Humidity">
           <HumidityIcon />
         </WeatherInfoItem>
-        <WeatherInfoItem :info="formattedPressure" subtitle="Pressure">
+        <WeatherInfoItem :info="formattedValue.pressure" subtitle="Pressure">
           <PressureIcon />
         </WeatherInfoItem>
-        <WeatherInfoItem :info="formattedWind" subtitle="Wind">
+        <WeatherInfoItem :info="formattedValue.wind" subtitle="Wind">
           <WindIcon />
         </WeatherInfoItem>
-        <WeatherInfoItem :info="formattedSunrise" subtitle="Sunrise">
+        <WeatherInfoItem :info="formattedValue.sunrise" subtitle="Sunrise">
           <SunriseIcon />
         </WeatherInfoItem>
-        <WeatherInfoItem :info="formattedSunset" subtitle="Sunset">
+        <WeatherInfoItem :info="formattedValue.sunset" subtitle="Sunset">
           <SunsetIcon />
         </WeatherInfoItem>
         <WeatherInfoItem :info="formattedDaytime" subtitle="Daytime">
@@ -51,7 +52,13 @@
           v-bind:key="index"
         >
           <span class="weather-week__icon weather-week__icon_state">
-            <SmallSunIcon />
+            <component
+              :is="
+                getCurrentPeriod
+                  ? formatIconDay(d.weather.code)
+                  : formatIconNight(d.weather.code)
+              "
+            />
           </span>
           <p class="weather-week__title big-txt">
             {{ formatDate(d.sunrise_ts) }}
@@ -79,28 +86,37 @@ import WindIcon from "../components/icons/WindIcon";
 import SunriseIcon from "../components/icons/SunriseIcon";
 import SunsetIcon from "../components/icons/SunsetIcon";
 import DaytimeIcon from "../components/icons/DaytimeIcon";
-import ArrowupIcon from "../components/icons/ArrowupIcon";
-import ArrowdownIcon from "../components/icons/ArrowdownIcon";
 import SmallSunIcon from "../components/icons/SmallSunIcon";
 import WeatherInfoItem from "../components/WeatherInfoItem";
 import WeatherPlace from "../components/WeatherPlace";
 import WeatherNow from "../components/WeatherNow";
+import MistIcon from "../components/icons/MistIcon";
+import SnowIcon from "../components/icons/SnowIcon";
+import ScatteredCloudsIcon from "../components/icons/ScatteredCloudsIcon";
+import BrokenCloudsIcon from "../components/icons/BrokenCloudsIcon";
+import ShowerRainIcon from "../components/icons/ShowerRainIcon";
+import ThunderstormIcon from "../components/icons/ThunderstormIcon";
+import FewCloudsIcon from "../components/icons/FewCloudsIcon";
+import RainNightIcon from "../components/icons/RainNightIcon";
+import FewCloudsNightIcon from "../components/icons/FewCloudsNightIcon";
+import SmallMoonIcon from "../components/icons/SmallMoonIcon";
+import RainIcon from "../components/icons/RainIcon";
+import ArrowupIcon from "../components/icons/ArrowupIcon";
+import ArrowdownIcon from "../components/icons/ArrowdownIcon";
 import Loader from "../components/Loader";
-import axios from "axios";
-import { DateTime } from "luxon";
 import PageNotFound from "../components/PageNotFound";
-import { mapActions, mapGetters } from "vuex";
+import { DateTime } from "luxon";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "Weather",
   components: {
     PageNotFound,
     Loader,
-    WeatherNow,
-    WeatherPlace,
-    SmallSunIcon,
     ArrowdownIcon,
     ArrowupIcon,
+    WeatherNow,
+    WeatherPlace,
     DaytimeIcon,
     SunsetIcon,
     SunriseIcon,
@@ -108,81 +124,91 @@ export default {
     PressureIcon,
     HumidityIcon,
     WeatherInfoItem,
+    RainIcon,
+    SmallSunIcon,
+    MistIcon,
+    SnowIcon,
+    ScatteredCloudsIcon,
+    BrokenCloudsIcon,
+    ShowerRainIcon,
+    ThunderstormIcon,
+    FewCloudsIcon,
+    RainNightIcon,
+    FewCloudsNightIcon,
+    SmallMoonIcon,
   },
   data() {
-    return {
-      weather: null,
-      loading: false,
-      error: null,
-    };
+    return {};
   },
   mounted() {
-    this.getWeather();
-    this.GET_WEATHER_FROM_API();
+    // TODO ES: move to a separate method and handle errors
+    this.getWeatherFromApi();
   },
   computed: {
-    ...mapGetters(["WEATHER"]),
-    formattedHumidity() {
-      return this.weather.data[0].rh + `%`;
-    },
-    formattedPressure() {
-      return this.weather.data[0].pres.toFixed(1) + `mBar`;
-    },
-    formattedWind() {
-      return this.weather.data[0].wind_spd.toFixed(1) + ` km/h`;
-    },
-    formattedSunrise() {
-      return DateTime.fromSeconds(this.weather.data[0].sunrise_ts).toFormat(
-        "h:mm a"
-      );
-    },
-    formattedSunset() {
-      return DateTime.fromSeconds(this.weather.data[0].sunset_ts).toFormat(
-        "h:mm a"
-      );
+    ...mapState(["loading", "error", "weather"]),
+    formattedValue() {
+      return {
+        humidity: this.weather.data[0].rh + `%`,
+        pressure: this.weather.data[0].pres.toFixed(1) + `mBar`,
+        wind: this.weather.data[0].wind_spd.toFixed(1) + ` km/h`,
+        sunrise: DateTime.fromSeconds(this.weather.data[0].sunrise_ts).toFormat(
+          "h:mm a"
+        ),
+        sunset: DateTime.fromSeconds(this.weather.data[0].sunset_ts).toFormat(
+          "h:mm a"
+        ),
+      };
     },
     formattedDaytime() {
       const dateOne = DateTime.fromSeconds(this.weather.data[0].sunrise_ts);
       const dateTwo = DateTime.fromSeconds(this.weather.data[0].sunset_ts);
 
       const diff = dateTwo.diff(dateOne, ["hours", "minutes"]);
-
       return diff.hours + `h ` + Math.round(diff.minutes) + "m";
     },
     getCurrentPeriod() {
       const start = 6;
       const finish = 18;
       const currentHour = DateTime.now().toFormat("HH");
-      if (currentHour >= start && currentHour <= finish) {
-        return true;
-      } else {
-        return false;
-      }
+      return currentHour >= start && currentHour <= finish;
     },
   },
   methods: {
-    ...mapActions(["GET_WEATHER_FROM_API"]),
-    async getWeather() {
-      this.loading = true;
-      const url = `https://api.weatherbit.io/v2.0/forecast/daily`;
-      try {
-        const response = await axios.get(url, {
-          params: {
-            lat: "47.2362",
-            lon: "38.8969",
-            days: 7,
-            key: process.env.VUE_APP_WEATHER_API_KEY,
-          },
-        });
-        this.weather = response.data;
-      } catch (error) {
-        this.error = error;
-      } finally {
-        this.loading = false;
-      }
-    },
+    ...mapActions(["getWeatherFromApi"]),
     formatDate(date) {
       return DateTime.fromSeconds(date).toFormat("ccc, dd");
+    },
+    formatIconDay(iconCode) {
+      switch (iconCode) {
+        case 200:
+          return "ThunderstormIcon";
+        case 500:
+          return "RainIcon";
+        case 521:
+          return "ShowerRainIcon";
+        case 601:
+          return "SnowIcon";
+        case 700:
+          return "MistIcon";
+        case 802:
+          return "ScatteredCloudsIcon";
+        case 801:
+          return "FewCloudsIcon";
+        case 803:
+          return "BrokenCloudsIcon";
+        default:
+          return "SmallSunIcon";
+      }
+    },
+    formatIconNight(iconCode) {
+      switch (iconCode) {
+        case 500:
+          return "RainNightIcon";
+        case 801:
+          return "FewCloudsNightIcon";
+        default:
+          return "SmallMoonIcon";
+      }
     },
   },
 };
@@ -213,8 +239,8 @@ export default {
 }
 
 .weather-info {
-  padding: 18px 10px 2px;
   margin: 0;
+  padding: 18px 10px 2px;
   list-style: none;
   display: flex;
   justify-content: space-between;
@@ -222,8 +248,8 @@ export default {
 }
 
 .weather-week {
-  padding: 12px 20px 35px;
   margin: 0;
+  padding: 12px 20px 35px;
   list-style: none;
   display: inline-flex;
   overflow: auto;

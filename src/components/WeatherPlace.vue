@@ -15,7 +15,7 @@ export default {
   name: "WeatherPlace",
   components: { MarkIcon },
   props: {
-    city: { type: String, required: true },
+    city: { type: String, required: false },
   },
   computed: {
     formattedDate() {

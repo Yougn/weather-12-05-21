@@ -17,7 +17,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// TODO ES: find a way to import .scss
+// TODO ES: move globally
 @import "../assets/styles/variables.css";
 @import "../assets/styles/typography.css";
 .weather-info {

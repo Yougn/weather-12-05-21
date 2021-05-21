@@ -4,8 +4,7 @@
       <span>
         {{ description }}
       </span>
-      <!--      <components :is="" />-->
-      <span><SmallSunIcon /></span>
+      <component :is="isDay ? `SunIcon` : `MoonIcon`" />
     </p>
     <h2 class="weather-now__temperature">{{ formattedTemp }}</h2>
     <p class="weather-peaks">
@@ -20,16 +19,21 @@
 </template>
 
 <script>
-import SmallSunIcon from "./icons/SmallSunIcon";
-
+import SunIcon from "./icons/SunIcon";
+import MoonIcon from "./icons/MoonIcon";
 export default {
   name: "WeatherNow",
-  components: { SmallSunIcon },
+  components: {
+    SunIcon,
+    MoonIcon,
+  },
+  // TODO ES: remove unnecessary props in favour of store
   props: {
     description: { type: String, required: true },
     temp: { type: Number, required: true },
     maxTemp: { type: Number, required: true },
     minTemp: { type: Number, required: true },
+    isDay: { type: Boolean, required: true },
   },
   computed: {
     formattedTemp() {
