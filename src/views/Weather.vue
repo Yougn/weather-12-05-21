@@ -3,15 +3,7 @@
     <Loader />
   </div>
   <div v-else>
-    <img
-      class="weather-bg"
-      :src="
-        getCurrentPeriod
-          ? require(`../assets/day.svg`)
-          : require(`../assets/night.svg`)
-      "
-      alt="Street"
-    />
+    <img class="weather-bg" :src="require(getDayOrNightImgPath)" alt="Street" />
     <p v-if="error" class="weather-error">{{ error.message }}</p>
     <div v-else-if="weather" class="weather">
       <WeatherPlace />
@@ -47,6 +39,7 @@
           v-bind:key="index"
         >
           <span class="weather-week__icon weather-week__icon_state">
+            <!--TODO ES: use computed instead of multiline logic-->
             <component
               :is="
                 getCurrentPeriod
@@ -104,6 +97,7 @@ import { mapActions, mapState } from "vuex";
 
 export default {
   name: "Weather",
+  // TODO ES: set icons global
   components: {
     Loader,
     ArrowupIcon,
@@ -143,8 +137,10 @@ export default {
     ...mapState(["weather"]),
     formattedWeather() {
       return {
+        // TODO ES: DRY
         humidity: this.weather.data[0].rh + `%`,
         pressure: this.weather.data[0].pres.toFixed(1) + `mBar`,
+        // TODO ES: use template string
         wind: this.weather.data[0].wind_spd.toFixed(1) + ` km/h`,
         sunrise: DateTime.fromSeconds(this.weather.data[0].sunrise_ts).toFormat(
           "h:mm a"
@@ -155,10 +151,12 @@ export default {
       };
     },
     formattedDaytime() {
+      // TODO ES: DRY
       const dateOne = DateTime.fromSeconds(this.weather.data[0].sunrise_ts);
       const dateTwo = DateTime.fromSeconds(this.weather.data[0].sunset_ts);
 
       const diff = dateTwo.diff(dateOne, ["hours", "minutes"]);
+      // TODO ES: use template string
       return diff.hours + `h ` + Math.round(diff.minutes) + "m";
     },
     getCurrentPeriod() {
@@ -166,6 +164,11 @@ export default {
       const finish = 18;
       const currentHour = DateTime.now().toFormat("HH");
       return currentHour >= start && currentHour <= finish;
+    },
+    getDayOrNightImgPath() {
+      return this.getCurrentPeriod
+        ? "../assets/day.svg"
+        : "../assets/night.svg";
     },
   },
   methods: {
@@ -261,15 +264,7 @@ export default {
   text-align: center;
 }
 
-.weather-info {
-  margin: 0;
-  padding: 18px 10px 2px;
-  list-style: none;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
+// TODO ES: nest classes for scope protection
 .weather-week {
   margin: 0;
   padding: 12px 20px 35px;
@@ -294,6 +289,7 @@ export default {
       right: -20px;
       bottom: 0;
       width: 20px;
+      // TODO ES: redundantly big height
       height: 101px;
       background-repeat: no-repeat;
       background-position: center;
@@ -307,6 +303,7 @@ export default {
   &__container {
     display: flex;
     justify-content: space-between;
+    // TODO ES: hardcoded width of a child should not decide the width of the parent
     width: 58px;
     padding: 5px 0;
     position: relative;
