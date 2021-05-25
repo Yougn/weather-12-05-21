@@ -2,17 +2,24 @@
   <div class="weather-now">
     <p class="weather-now__state">
       <span>
-        {{ description }}
+        {{ weather.data[0].weather.description }}
       </span>
-      <component :is="isDay ? `SunIcon` : `MoonIcon`" />
+      <component
+        :is="
+          isDay
+            ? formatIconDay(weather.data[0].weather.code)
+            : formatIconNight(weather.data[0].weather.code)
+        "
+        class="weather-now__icon"
+      />
     </p>
     <h2 class="weather-now__temperature">{{ formattedTemp }}</h2>
     <p class="weather-peaks">
-      <span class="weather-peaks__item weather-peaks__item_top">
-        {{ maxTemp }} °C
+      <span class="weather-peaks__item weather-peaks__item_up">
+        {{ weather.data[0].max_temp }} °C
       </span>
       <span class="weather-peaks__item weather-peaks__item_down">
-        {{ minTemp }} °C
+        {{ weather.data[0].min_temp }} °C
       </span>
     </p>
   </div>
@@ -21,30 +28,52 @@
 <script>
 import SunIcon from "./icons/SunIcon";
 import MoonIcon from "./icons/MoonIcon";
+import RainIcon from "./icons/RainIcon";
+import SmallSunIcon from "./icons/SmallSunIcon";
+import MistIcon from "./icons/MistIcon";
+import SnowIcon from "./icons/SnowIcon";
+import ScatteredCloudsIcon from "./icons/ScatteredCloudsIcon";
+import BrokenCloudsIcon from "./icons/BrokenCloudsIcon";
+import ShowerRainIcon from "./icons/ShowerRainIcon";
+import ThunderstormIcon from "./icons/ThunderstormIcon";
+import FewCloudsIcon from "./icons/FewCloudsIcon";
+import RainNightIcon from "./icons/RainNightIcon";
+import FewCloudsNightIcon from "./icons/FewCloudsNightIcon";
+import SmallMoonIcon from "./icons/SmallMoonIcon";
+import { mapState } from "vuex";
 export default {
   name: "WeatherNow",
   components: {
     SunIcon,
     MoonIcon,
+    RainIcon,
+    SmallSunIcon,
+    MistIcon,
+    SnowIcon,
+    ScatteredCloudsIcon,
+    BrokenCloudsIcon,
+    ShowerRainIcon,
+    ThunderstormIcon,
+    FewCloudsIcon,
+    RainNightIcon,
+    FewCloudsNightIcon,
+    SmallMoonIcon,
   },
-  // TODO ES: remove unnecessary props in favour of store
   props: {
-    description: { type: String, required: true },
-    temp: { type: Number, required: true },
-    maxTemp: { type: Number, required: true },
-    minTemp: { type: Number, required: true },
     isDay: { type: Boolean, required: true },
+    formatIconDay: { type: Function, required: true },
+    formatIconNight: { type: Function, required: true },
   },
   computed: {
+    ...mapState(["weather"]),
     formattedTemp() {
-      return Math.round(this.temp);
+      return Math.round(this.weather.data[0].temp);
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/styles/variables.css";
 .weather-now {
   display: flex;
   justify-content: space-between;
@@ -59,10 +88,16 @@ export default {
     margin: 0;
     padding-bottom: 5px;
     max-width: 60px;
+    text-align: center;
     font-size: 18px;
     font-weight: 500;
     line-height: 22px;
     letter-spacing: -0.05em;
+  }
+
+  &__icon {
+    width: 40px;
+    height: 40px;
   }
 
   &__temperature {
@@ -108,7 +143,7 @@ export default {
       line-height: 19px;
       color: var(--color-dark-grey);
 
-      &_top::after {
+      &_up::after {
         position: absolute;
         content: "";
         top: 3px;

@@ -2,11 +2,7 @@
   <div v-if="loading">
     <Loader />
   </div>
-  <div v-else-if="error">
-    <img class="weather-bg" src="../assets/day.svg" alt="Street" />
-    <PageNotFound />
-  </div>
-  <div v-else-if="weather">
+  <div v-else>
     <img
       class="weather-bg"
       :src="
@@ -16,29 +12,28 @@
       "
       alt="Street"
     />
-    <div class="weather">
-      <WeatherPlace :city="weather.city_name" />
+    <p v-if="error" class="weather-error">{{ error.message }}</p>
+    <div v-else-if="weather" class="weather">
+      <WeatherPlace />
       <WeatherNow
-        :description="weather.data[0].weather.description"
         :isDay="getCurrentPeriod"
-        :temp="weather.data[0].temp"
-        :maxTemp="weather.data[0].max_temp"
-        :minTemp="weather.data[0].min_temp"
+        :formatIconDay="formatIconDay"
+        :formatIconNight="formatIconNight"
       />
       <ul class="weather-info">
-        <WeatherInfoItem :info="formattedValue.humidity" subtitle="Humidity">
+        <WeatherInfoItem :info="formattedWeather.humidity" subtitle="Humidity">
           <HumidityIcon />
         </WeatherInfoItem>
-        <WeatherInfoItem :info="formattedValue.pressure" subtitle="Pressure">
+        <WeatherInfoItem :info="formattedWeather.pressure" subtitle="Pressure">
           <PressureIcon />
         </WeatherInfoItem>
-        <WeatherInfoItem :info="formattedValue.wind" subtitle="Wind">
+        <WeatherInfoItem :info="formattedWeather.wind" subtitle="Wind">
           <WindIcon />
         </WeatherInfoItem>
-        <WeatherInfoItem :info="formattedValue.sunrise" subtitle="Sunrise">
+        <WeatherInfoItem :info="formattedWeather.sunrise" subtitle="Sunrise">
           <SunriseIcon />
         </WeatherInfoItem>
-        <WeatherInfoItem :info="formattedValue.sunset" subtitle="Sunset">
+        <WeatherInfoItem :info="formattedWeather.sunset" subtitle="Sunset">
           <SunsetIcon />
         </WeatherInfoItem>
         <WeatherInfoItem :info="formattedDaytime" subtitle="Daytime">
@@ -64,11 +59,11 @@
             {{ formatDate(d.sunrise_ts) }}
           </p>
           <span class="weather-week__container">
-            <span class="weather-week__text small-txt">
+            <span class="weather-week__text subtitle">
               {{ d.max_temp }}
               <span class="weather-week__icon"><ArrowupIcon /></span>
             </span>
-            <span class="weather-week__text small-txt">
+            <span class="weather-week__text subtitle">
               {{ d.min_temp }}
               <span class="weather-week__icon"><ArrowdownIcon /></span>
             </span>
@@ -104,17 +99,15 @@ import RainIcon from "../components/icons/RainIcon";
 import ArrowupIcon from "../components/icons/ArrowupIcon";
 import ArrowdownIcon from "../components/icons/ArrowdownIcon";
 import Loader from "../components/Loader";
-import PageNotFound from "../components/PageNotFound";
 import { DateTime } from "luxon";
 import { mapActions, mapState } from "vuex";
 
 export default {
   name: "Weather",
   components: {
-    PageNotFound,
     Loader,
-    ArrowdownIcon,
     ArrowupIcon,
+    ArrowdownIcon,
     WeatherNow,
     WeatherPlace,
     DaytimeIcon,
@@ -138,15 +131,17 @@ export default {
     SmallMoonIcon,
   },
   data() {
-    return {};
+    return {
+      loading: false,
+      error: null,
+    };
   },
   mounted() {
-    // TODO ES: move to a separate method and handle errors
-    this.getWeatherFromApi();
+    this.loadWeather();
   },
   computed: {
-    ...mapState(["loading", "error", "weather"]),
-    formattedValue() {
+    ...mapState(["weather"]),
+    formattedWeather() {
       return {
         humidity: this.weather.data[0].rh + `%`,
         pressure: this.weather.data[0].pres.toFixed(1) + `mBar`,
@@ -175,6 +170,17 @@ export default {
   },
   methods: {
     ...mapActions(["getWeatherFromApi"]),
+    async loadWeather() {
+      this.loading = true;
+      this.error = null;
+      try {
+        await this.getWeatherFromApi();
+      } catch (error) {
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
+    },
     formatDate(date) {
       return DateTime.fromSeconds(date).toFormat("ccc, dd");
     },
@@ -190,10 +196,10 @@ export default {
           return "SnowIcon";
         case 700:
           return "MistIcon";
-        case 802:
-          return "ScatteredCloudsIcon";
         case 801:
           return "FewCloudsIcon";
+        case 802:
+          return "ScatteredCloudsIcon";
         case 803:
           return "BrokenCloudsIcon";
         default:
@@ -202,10 +208,22 @@ export default {
     },
     formatIconNight(iconCode) {
       switch (iconCode) {
+        case 200:
+          return "ThunderstormIcon";
         case 500:
           return "RainNightIcon";
+        case 521:
+          return "ShowerRainIcon";
+        case 601:
+          return "SnowIcon";
+        case 700:
+          return "MistIcon";
         case 801:
           return "FewCloudsNightIcon";
+        case 802:
+          return "ScatteredCloudsIcon";
+        case 803:
+          return "BrokenCloudsIcon";
         default:
           return "SmallMoonIcon";
       }
@@ -215,12 +233,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../assets/styles/variables.css";
-@import "../assets/styles/typography.css";
-
 .weather-bg {
   width: 100%;
-  max-height: 300px;
+  height: calc(100vh - 510px);
+  min-height: 50px;
   object-fit: cover;
   margin-bottom: -23px;
   background-color: var(--bg-img);
@@ -236,6 +252,13 @@ export default {
   border-radius: 24px 24px 0 0;
   overflow: hidden;
   z-index: 2;
+}
+
+.weather-error {
+  margin: 0;
+  padding-top: 100px;
+  font-size: 18px;
+  text-align: center;
 }
 
 .weather-info {

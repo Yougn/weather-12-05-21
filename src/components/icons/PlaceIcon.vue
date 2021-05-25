@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: "MarkIcon",
+  name: "PlaceIcon",
 };
 </script>
 

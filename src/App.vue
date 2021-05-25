@@ -34,7 +34,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-style: normal;
   font-weight: normal;
-  text-align: center;
   color: var(--black);
 }
 
