@@ -1,8 +1,8 @@
 <template>
   <li class="weather-info__item">
     <span class="weather-info__icon"><slot /></span>
-    <p class="weather-info__text big-txt">{{ info }}</p>
-    <span class="weather-info__subtitle small-txt">{{ subtitle }}</span>
+    <p class="weather-info__text title">{{ info }}</p>
+    <span class="weather-info__subtitle subtitle">{{ subtitle }}</span>
   </li>
 </template>
 
@@ -17,9 +17,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// TODO ES: move globally
-@import "../assets/styles/variables.css";
-@import "../assets/styles/typography.css";
 .weather-info {
   &__item {
     display: flex;
