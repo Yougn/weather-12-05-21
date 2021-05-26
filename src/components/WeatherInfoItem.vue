@@ -32,6 +32,7 @@ export default {
       margin-bottom: 0;
     }
   }
+
   &__icon {
     padding-bottom: 10px;
   }
