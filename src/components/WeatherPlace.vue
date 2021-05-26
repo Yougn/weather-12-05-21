@@ -1,22 +1,22 @@
 <template>
   <div class="weather-place">
-    <p class="weather-place__date">{{ formattedDate }}</p>
+    <p class="weather-place__date">{{ formattedDate() }}</p>
     <p class="weather-place__city">
       {{ weather.city_name }}, Russia
-      <span class="weather-place__icon"><MarkIcon /></span>
+      <span class="weather-place__icon"><PlaceIcon /></span>
     </p>
   </div>
 </template>
 
 <script>
 import { DateTime } from "luxon";
-import MarkIcon from "./icons/PlaceIcon";
 import { mapState } from "vuex";
 export default {
   name: "WeatherPlace",
-  components: { MarkIcon },
   computed: {
     ...mapState(["weather"]),
+  },
+  methods: {
     formattedDate() {
       return DateTime.now().toFormat("ccc, dd LLL yyyy hh:mma");
     },
@@ -32,9 +32,10 @@ export default {
   &__date {
     margin: 0;
     max-width: 180px;
-    padding: 15px 20px;
+    padding: 16px 20px;
     font-size: 14px;
     line-height: 17px;
+    letter-spacing: 0.5px;
     color: var(--color-grey);
   }
 
