@@ -72,3 +72,4 @@ export const getFormattedIcon = (iconCode) => {
   );
   return currentIcon;
 };
+

@@ -1,6 +1,6 @@
 <template>
   <div class="weather-place">
-    <p class="weather-place__date">{{ formattedDate() }}</p>
+    <p class="weather-place__date">{{ date }}</p>
     <p class="weather-place__city">
       {{ weather.city_name }}, Russia
       <span class="weather-place__icon"><PlaceIcon /></span>
@@ -13,6 +13,11 @@ import { DateTime } from "luxon";
 import { mapState } from "vuex";
 export default {
   name: "WeatherPlace",
+  data() {
+    return {
+      date: "",
+    };
+  },
   computed: {
     ...mapState(["weather"]),
   },
@@ -20,8 +25,9 @@ export default {
     setInterval(this.getNow, 100);
   },
   methods: {
-    formattedDate() {
-      return DateTime.now().toFormat("ccc, dd LLL yyyy hh:mma");
+    getNow: function () {
+      const dateTime = DateTime.now().toFormat("ccc, dd LLL yyyy hh:mma");
+      this.date = dateTime;
     },
   },
 };
