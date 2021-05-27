@@ -1,17 +1,13 @@
 <template>
   <div class="weather-now">
     <p class="weather-now__state">
+      <component
+        :is="formatIcon(weather.data[0].weather.icon)"
+        class="weather-now__icon"
+      />
       <span>
         {{ weather.data[0].weather.description }}
       </span>
-      <component
-        :is="
-          isDay
-            ? formatIconDay(weather.data[0].weather.code)
-            : formatIconNight(weather.data[0].weather.code)
-        "
-        class="weather-now__icon"
-      />
     </p>
     <h2 class="weather-now__temperature">
       {{ formattedTemp(weather.data[0].temp) }}
@@ -29,19 +25,18 @@
 
 <script>
 import { mapState } from "vuex";
+import { getFormattedIcon } from "../utils/weatherIcon";
 export default {
   name: "WeatherNow",
-  props: {
-    isDay: { type: Boolean, required: true },
-    formatIconDay: { type: Function, required: true },
-    formatIconNight: { type: Function, required: true },
-  },
   computed: {
     ...mapState(["weather"]),
   },
   methods: {
     formattedTemp(temp) {
       return Math.round(temp);
+    },
+    formatIcon(code) {
+      return getFormattedIcon(code);
     },
   },
 };
@@ -53,14 +48,13 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin: 0;
-  padding: 10px 42px 20px;
+  padding: 4px 42px 18px;
 
   &__state {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     align-items: center;
     margin: 0;
-    padding-bottom: 5px;
     max-width: 60px;
     text-align: center;
     font-size: 18px;
@@ -107,20 +101,23 @@ export default {
     align-items: center;
     position: relative;
     margin: 0;
-    padding: 0 5px 0;
+    padding: 0 10px 0;
 
     &__item {
       position: relative;
-      padding-bottom: 10px;
       font-weight: 300;
       font-size: 16px;
       line-height: 19px;
       color: var(--color-dark-grey);
 
+      &_up {
+        padding: 0 0 12px;
+      }
+
       &_up::after {
         position: absolute;
         content: "";
-        top: 3px;
+        top: 4px;
         right: -10px;
         width: 10px;
         height: 10px;

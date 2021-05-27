@@ -21,8 +21,8 @@ export default {
   computed: {
     ...mapState(["weather"]),
   },
-  created() {
-    setInterval(this.getNow, 1000);
+  mounted() {
+    setInterval(this.getNow, 100);
   },
   methods: {
     getNow: function () {
@@ -50,7 +50,7 @@ export default {
 
   &__city {
     margin: 0 0 16px;
-    padding: 14px 20px 15px 27px;
+    padding: 14px 20px 14px 27px;
     font-size: 16px;
     font-weight: 500;
     line-height: 19px;

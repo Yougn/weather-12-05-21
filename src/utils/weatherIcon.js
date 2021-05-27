@@ -1,17 +1,75 @@
-const WeatherIconDay = Object.freeze({
- "ThunderstormIcon": [200, 201, 202, 230, 231, 232, 233, 300, 301, 302],
- "RainIcon": [500, 501, 502, 511],
- "ShowerRainIcon": [520, 521, 522],
- "SnowIcon": [600, 601, 602, 610, 611, 612, 621, 622, 623],
- "MistIcon": [700, 711, 721, 731, 741, 751 ],
- "SmallSunIcon":[800],
- "FewCloudsIcon": [801],
- "ScatteredCloudsIcon": [802],
- "BrokenCloudsIcon": [803, 804, 900]
+const WeatherIconsDay = Object.freeze({
+  ThunderstormIcon: [
+    "t01d",
+    "t01n",
+    "t02d",
+    "t02n",
+    "t03d",
+    "t03n",
+    "t04d",
+    "t04n",
+    "t04d",
+    "t04n",
+    "t04d",
+    "t04n",
+    "t05d",
+    "t05n",
+  ],
+  RainIcon: ["r01d", "r02d", "r03d", "f01d"],
+  RainNightIcon: ["r01n", "r02n", "r03n", "f01n", "r04n", "r05n", "r06n"],
+  ShowerRainIcon: ["r04d", "r05d", "r06d"],
+  SnowIcon: [
+    "d01d",
+    "d01n",
+    "d02d",
+    "d02n",
+    "d03d",
+    "d03n",
+    "s01d",
+    "s01n",
+    "s02d",
+    "s02n",
+    "s03d",
+    "s03n",
+    "s04d",
+    "s04n",
+    "s05d",
+    "s05n",
+    "s05d",
+    "s05n",
+    "s01d",
+    "s01n",
+    "s02d",
+    "s02n",
+    "s06d",
+    "s06n",
+  ],
+  MistIcon: [
+    "a01d",
+    "a01n",
+    "a02d",
+    "a02n",
+    "a03d",
+    "a03n",
+    "a04d",
+    "a04n",
+    "a05d",
+    "a05n",
+    "a06d",
+    "a06n",
+  ],
+  SmallSunIcon: ["c01d"],
+  SmallMoonIcon: ["c01n"],
+  FewCloudsIcon: ["c02d"],
+  FewCloudsNightIcon: ["c02n", "c02n", "c03n", "c04n"],
+  ScatteredCloudsIcon: ["c02d"],
+  BrokenCloudsIcon: ["c03d", "c04d", "u00d", "u00n"],
 });
 
-export const getFormattedIcons = (iconCode) => {
-    const currentIcon = Object.keys(WeatherIconDay).find(key => WeatherIconDay[key].indexOf(iconCode) !== -1)
-    return currentIcon;
+export const getFormattedIcon = (iconCode) => {
+  const currentIcon = Object.keys(WeatherIconsDay).find(
+    (key) => WeatherIconsDay[key].indexOf(iconCode) !== -1
+  );
+  return currentIcon;
 };
 
