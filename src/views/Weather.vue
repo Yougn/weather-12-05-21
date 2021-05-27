@@ -228,7 +228,7 @@ export default {
     &__container {
       display: flex;
       justify-content: space-between;
-      padding: 5px 0;
+      padding: 6px 0;
       position: relative;
     }
 
