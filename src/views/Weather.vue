@@ -3,59 +3,65 @@
     <Loader />
   </div>
   <div v-else>
-    <img class="weather-bg" :src="getDayOrNightImgPath" alt="Street" />
     <p v-if="error" class="weather-error">{{ error.message }}</p>
-    <div v-else-if="weather" class="weather">
-      <WeatherPlace />
-      <WeatherNow
-        :isDay="getCurrentPeriod"
-        :formatIconDay="formatIconDay"
-        :formatIconNight="formatIconNight"
-      />
-      <ul class="weather-info">
-        <WeatherInfoItem :info="formattedWeather.humidity" subtitle="Humidity">
-          <HumidityIcon />
-        </WeatherInfoItem>
-        <WeatherInfoItem :info="formattedWeather.pressure" subtitle="Pressure">
-          <PressureIcon />
-        </WeatherInfoItem>
-        <WeatherInfoItem :info="formattedWeather.wind" subtitle="Wind">
-          <WindIcon />
-        </WeatherInfoItem>
-        <WeatherInfoItem :info="formattedWeather.sunrise" subtitle="Sunrise">
-          <SunriseIcon />
-        </WeatherInfoItem>
-        <WeatherInfoItem :info="formattedWeather.sunset" subtitle="Sunset">
-          <SunsetIcon />
-        </WeatherInfoItem>
-        <WeatherInfoItem :info="formattedDaytime" subtitle="Daytime">
-          <DaytimeIcon />
-        </WeatherInfoItem>
-      </ul>
-      <ul class="weather-week">
-        <li
-          class="weather-week__item"
-          v-for="(d, index) in weather.data"
-          v-bind:key="index"
-        >
-          <span class="weather-week__icon weather-week__icon_state">
-            <component :is="getFormattedIcons(d.weather.code)" />
-          </span>
-          <p class="weather-week__title title">
-            {{ formatDate(d.sunrise_ts) }}
-          </p>
-          <span class="weather-week__container">
-            <span class="weather-week__text weather-week__text_left subtitle">
-              {{ d.max_temp }}
-              <span class="weather-week__icon"><ArrowupIcon /></span>
+    <div v-else-if="weather">
+      <img class="weather-bg" :src="getDayOrNightImgPath" alt="Street" />
+      <div class="weather">
+        <WeatherPlace />
+        <WeatherNow />
+        <ul class="weather-info">
+          <WeatherInfoItem
+            :info="formattedWeather.humidity"
+            subtitle="Humidity"
+          >
+            <HumidityIcon />
+          </WeatherInfoItem>
+          <WeatherInfoItem
+            :info="formattedWeather.pressure"
+            subtitle="Pressure"
+          >
+            <PressureIcon />
+          </WeatherInfoItem>
+          <WeatherInfoItem :info="formattedWeather.wind" subtitle="Wind">
+            <WindIcon />
+          </WeatherInfoItem>
+          <WeatherInfoItem :info="formattedWeather.sunrise" subtitle="Sunrise">
+            <SunriseIcon />
+          </WeatherInfoItem>
+          <WeatherInfoItem :info="formattedWeather.sunset" subtitle="Sunset">
+            <SunsetIcon />
+          </WeatherInfoItem>
+          <WeatherInfoItem :info="formattedDaytime" subtitle="Daytime">
+            <DaytimeIcon />
+          </WeatherInfoItem>
+        </ul>
+        <ul class="weather-week">
+          <li
+            class="weather-week__item"
+            v-for="(d, index) in weather.data"
+            v-bind:key="index"
+          >
+            <span class="weather-week__icon weather-week__icon_state">
+              <component :is="formatIcon(d.weather.icon)" />
             </span>
-            <span class="weather-week__text weather-week__text_right subtitle">
-              {{ d.min_temp }}
-              <span class="weather-week__icon"><ArrowdownIcon /></span>
+            <p class="weather-week__title title">
+              {{ formatDate(d.sunrise_ts) }}
+            </p>
+            <span class="weather-week__container">
+              <span class="weather-week__text weather-week__text_left subtitle">
+                {{ d.max_temp }}
+                <span class="weather-week__icon"><ArrowupIcon /></span>
+              </span>
+              <span
+                class="weather-week__text weather-week__text_right subtitle"
+              >
+                {{ d.min_temp }}
+                <span class="weather-week__icon"><ArrowdownIcon /></span>
+              </span>
             </span>
-          </span>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -66,6 +72,7 @@ import WeatherPlace from "../components/WeatherPlace";
 import WeatherNow from "../components/WeatherNow";
 import WeatherInfoItem from "../components/WeatherInfoItem";
 import { DateTime } from "luxon";
+import { getFormattedIcon } from "../utils/weatherIcon";
 import { mapActions, mapState } from "vuex";
 
 export default {
@@ -92,12 +99,12 @@ export default {
         humidity: `${this.weather.data[0].rh}%`,
         pressure: `${this.weather.data[0].pres.toFixed(1)}mBar`,
         wind: `${this.weather.data[0].wind_spd.toFixed(1)} km/h`,
-        sunrise: DateTime.fromSeconds(this.weather.data[0].sunrise_ts).toFormat(
-          "h:mm a"
-        ),
-        sunset: DateTime.fromSeconds(this.weather.data[0].sunset_ts).toFormat(
-          "h:mm a"
-        ),
+        sunrise: DateTime.fromSeconds(this.weather.data[0].sunrise_ts)
+          .setZone("Europe/Moscow")
+          .toFormat("h:mm a"),
+        sunset: DateTime.fromSeconds(this.weather.data[0].sunset_ts)
+          .setZone("Europe/Moscow")
+          .toFormat("h:mm a"),
       };
     },
     formattedDaytime() {
@@ -140,54 +147,8 @@ export default {
     formatDate(date) {
       return DateTime.fromSeconds(date).toFormat("ccc, dd");
     },
-    formatIconDay(iconCode) {
-      switch (iconCode) {
-        case 200:
-          return "ThunderstormIcon";
-        case 500:
-          return "RainIcon";
-        case 521:
-          return "ShowerRainIcon";
-        case 601:
-          return "SnowIcon";
-        case 700:
-          return "MistIcon";
-        case 801:
-          return "FewCloudsIcon";
-        case 802:
-          return "ScatteredCloudsIcon";
-        case 803:
-          return "BrokenCloudsIcon";
-        default:
-          return "SmallSunIcon";
-      }
-    },
-    formatIconNight(iconCode) {
-      switch (iconCode) {
-        case 200:
-          return "ThunderstormIcon";
-        case 500:
-          return "RainNightIcon";
-        case 521:
-          return "ShowerRainIcon";
-        case 601:
-          return "SnowIcon";
-        case 700:
-          return "MistIcon";
-        case 801:
-          return "FewCloudsNightIcon";
-        case 802:
-          return "ScatteredCloudsIcon";
-        case 803:
-          return "BrokenCloudsIcon";
-        default:
-          return "SmallMoonIcon";
-      }
-    },
-    getFormattedIcons(iconCode) {
-      return this.getCurrentPeriod
-        ? this.formatIconDay(iconCode)
-        : this.formatIconNight(iconCode);
+    formatIcon(code) {
+      return getFormattedIcon(code);
     },
   },
 };
@@ -205,7 +166,7 @@ export default {
 
 .weather-error {
   margin: 0;
-  padding-top: 100px;
+  padding-top: 250px;
   font-size: 18px;
   text-align: center;
 }
@@ -223,7 +184,7 @@ export default {
 
   .weather-info {
     margin: 0;
-    padding: 15px;
+    padding: 16px 16px 4px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -231,7 +192,7 @@ export default {
 
   .weather-week {
     margin: 0;
-    padding: 12px 20px 35px;
+    padding: 12px 20px 48px;
     list-style: none;
     display: inline-flex;
     overflow: auto;
@@ -245,10 +206,6 @@ export default {
       background-color: var(--color-white);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
       border-radius: 16px;
-
-      &:last-child {
-        padding: 14px 26px 10px;
-      }
 
       &:last-child::before {
         position: absolute;
@@ -264,6 +221,7 @@ export default {
 
     &__title {
       margin: 0;
+      padding-top: 8px;
       text-align: center;
     }
 
