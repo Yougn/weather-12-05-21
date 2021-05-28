@@ -3,13 +3,31 @@
     <Loader />
   </div>
   <div v-else>
-    <p v-if="error" class="weather-error">{{ error.message }}</p>
+    <p v-if="error" class="m-0 pt-60 text-xl text-center">
+      {{ error.message }}
+    </p>
     <div v-else-if="weather">
-      <img class="weather-bg" :src="getDayOrNightImgPath" alt="Street" />
-      <div class="weather">
+      <img
+        class="w-full object-cover -mb-6 bg-bgImg weather-bg"
+        :src="getDayOrNightImgPath"
+        alt="Street"
+      />
+      <div
+        class="
+          flex flex-col
+          relative
+          w-full
+          bg-bgWhite
+          rounded-t-3xl
+          overflow-hidden
+          weather
+        "
+      >
         <WeatherPlace />
         <WeatherNow />
-        <ul class="weather-info">
+        <ul
+          class="flex flex-wrap justify-between m-0 pt-5 px-4 pb-1 weather-info"
+        >
           <WeatherInfoItem
             :info="formattedWeather.humidity"
             subtitle="Humidity"
@@ -35,28 +53,56 @@
             <DaytimeIcon />
           </WeatherInfoItem>
         </ul>
-        <ul class="weather-week">
+        <ul
+          class="
+            inline-flex
+            m-0
+            list-none
+            overflow-auto
+            pt-3
+            px-5
+            pb-12
+            weather-week
+          "
+        >
           <li
-            class="weather-week__item"
+            class="mr-5 weather-week__item"
             v-for="(d, index) in weather.data"
             v-bind:key="index"
           >
             <span class="weather-week__icon weather-week__icon_state">
               <component :is="formatIcon(d.weather.icon)" />
             </span>
-            <p class="weather-week__title title">
+            <p class="m-0 text-center title">
               {{ formatDate(d.sunrise_ts) }}
             </p>
-            <span class="weather-week__container">
-              <span class="weather-week__text weather-week__text_left subtitle">
+            <span
+              class="flex justify-between relative py-2 weather-week__container"
+            >
+              <span
+                class="
+                  flex
+                  items-center
+                  pr-2.5
+                  text-grey
+                  weather-week__text weather-week__text_left
+                  subtitle
+                "
+              >
                 {{ d.max_temp }}
-                <span class="weather-week__icon"><ArrowupIcon /></span>
+                <span class="pl-0.5"><ArrowupIcon /></span>
               </span>
               <span
-                class="weather-week__text weather-week__text_right subtitle"
+                class="
+                  flex
+                  items-center
+                  text-grey
+                  weather-week__text weather-week__text_right
+                  subtitle
+                "
               >
                 {{ d.min_temp }}
-                <span class="weather-week__icon"><ArrowdownIcon /></span>
+                <span class="pl-0.5"><ArrowdownIcon /></span>
               </span>
             </span>
           </li>
@@ -156,53 +202,18 @@ export default {
 
 <style scoped lang="scss">
 .weather-bg {
-  width: 100%;
   height: calc(100vh - 510px);
   min-height: 50px;
-  object-fit: cover;
-  margin-bottom: -26px;
-  background-color: var(--bg-img);
-}
-
-.weather-error {
-  margin: 0;
-  padding-top: 250px;
-  font-size: 18px;
-  text-align: center;
 }
 
 .weather {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  width: 100%;
-  background-color: var(--color-white);
   box-shadow: 0px -16px 40px rgba(0, 0, 0, 0.2);
-  border-radius: 24px 24px 0 0;
-  overflow: hidden;
   z-index: 2;
 
-  .weather-info {
-    margin: 0;
-    padding: 16px 16px 4px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-
   .weather-week {
-    margin: 0;
-    padding: 12px 20px 48px;
-    list-style: none;
-    display: inline-flex;
-    overflow: auto;
-
     &__item {
-      position: relative;
-      max-width: 95px;
-      padding: 14px 22px 10px;
-      margin-right: 20px;
-      text-align: center;
+      width: 95px;
+      padding: 16px 22px 8px;
       background-color: var(--color-white);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
       border-radius: 16px;
@@ -217,36 +228,6 @@ export default {
         background-repeat: no-repeat;
         background-position: center;
       }
-    }
-
-    &__title {
-      margin: 0;
-      padding-top: 8px;
-      text-align: center;
-    }
-
-    &__container {
-      display: flex;
-      justify-content: space-between;
-      padding: 6px 0;
-      position: relative;
-    }
-
-    &__text {
-      display: flex;
-      align-items: center;
-      color: var(--color-grey);
-
-      &_left {
-        padding-right: 10px;
-      }
-    }
-
-    &__icon {
-      &_state {
-        padding: 0 0 10px;
-      }
-      padding-left: 2px;
     }
   }
 }

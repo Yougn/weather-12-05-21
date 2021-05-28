@@ -1,9 +1,22 @@
 <template>
-  <div class="weather-place">
-    <p class="weather-place__date">{{ date }}</p>
-    <p class="weather-place__city">
+  <div class="flex justify-between weather-place">
+    <p class="m-0 px-5 py-4 text-grey weather-place__date">
+      {{ date }}
+    </p>
+    <p
+      class="
+        flex
+        m-0
+        mb-4
+        py-4
+        pr-5
+        pl-6
+        text-center text-blue
+        weather-place__city
+      "
+    >
       {{ weather.city_name }}, Russia
-      <span class="weather-place__icon"><PlaceIcon /></span>
+      <span class="pl-3 weather-place__icon"><PlaceIcon /></span>
     </p>
   </div>
 </template>
@@ -35,33 +48,19 @@ export default {
 
 <style lang="scss" scoped>
 .weather-place {
-  display: flex;
-  justify-content: space-between;
-
   &__date {
-    margin: 0;
     max-width: 180px;
-    padding: 16px 20px;
     font-size: 14px;
     line-height: 17px;
-    letter-spacing: 0.5px;
-    color: var(--color-grey);
+    letter-spacing: 1px;
   }
 
   &__city {
-    margin: 0 0 16px;
-    padding: 14px 20px 14px 27px;
     font-size: 16px;
     font-weight: 500;
     line-height: 19px;
-    text-align: center;
-    color: var(--color-blue);
     background: rgba(13, 159, 234, 0.08);
     border-radius: 0 0 0 25px;
-  }
-
-  &__icon {
-    padding-left: 12px;
   }
 }
 </style>
