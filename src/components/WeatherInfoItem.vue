@@ -1,8 +1,8 @@
 <template>
-  <li class="weather-info__item">
-    <span class="weather-info__icon"><slot /></span>
-    <p class="weather-info__text title">{{ info }}</p>
-    <span class="weather-info__subtitle subtitle">{{ subtitle }}</span>
+  <li class="flex flex-col items-center relative w-1/3 mb-8 weather-info__item">
+    <span class="pb-2"><slot /></span>
+    <p class="mb-0 title">{{ info }}</p>
+    <span class="pt-2 pb-2 text-grey subtitle">{{ subtitle }}</span>
   </li>
 </template>
 
@@ -19,31 +19,11 @@ export default {
 <style lang="scss" scoped>
 .weather-info {
   &__item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    width: 33%;
-    margin: 0 0 28px;
-
     &:nth-child(4),
     &:nth-child(5),
     &:last-child {
       margin-bottom: 0;
     }
-  }
-
-  &__icon {
-    padding-bottom: 10px;
-  }
-
-  &__text {
-    margin: 0;
-  }
-
-  &__subtitle {
-    padding: 5px 0 10px;
-    color: var(--color-grey);
   }
 }
 </style>
