@@ -21,7 +21,7 @@ const store = new Vuex.Store({
           lat: "47.2362",
           lon: "38.8969",
           days: 7,
-          key: process.env.VUE_APP_WEATHER_API_KEY,
+          key: '43013e41df9f443290b1a400251307e7',
         },
       });
       const weather = response.data;

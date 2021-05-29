@@ -16,7 +16,7 @@
       "
     >
       {{ weather.city_name }}, Russia
-      <span class="pl-3 weather-place__icon"><PlaceIcon /></span>
+      <span class="pl-3"><PlaceIcon /></span>
     </p>
   </div>
 </template>

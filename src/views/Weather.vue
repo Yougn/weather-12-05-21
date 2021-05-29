@@ -13,15 +13,7 @@
         alt="Street"
       />
       <div
-        class="
-          flex flex-col
-          relative
-          w-full
-          bg-bgWhite
-          rounded-t-3xl
-          overflow-hidden
-          weather
-        "
+        class="flex flex-col relative w-full bg-bgWhite rounded-t-3xl overflow-hidden weather"
       >
         <WeatherPlace />
         <WeatherNow />
@@ -54,25 +46,18 @@
           </WeatherInfoItem>
         </ul>
         <ul
-          class="
-            inline-flex
-            m-0
-            list-none
-            overflow-auto
-            pt-3
-            px-5
-            pb-12
-            weather-week
-          "
+          class="inline-flex m-0 list-none overflow-auto pt-3 px-5 pb-12 weather-week"
         >
           <li
-            class="mr-5 weather-week__item"
+            class="flex flex-col items-center mr-5 weather-week__item"
             v-for="(d, index) in weather.data"
             v-bind:key="index"
           >
-            <span class="weather-week__icon weather-week__icon_state">
-              <component :is="formatIcon(d.weather.icon)" />
-            </span>
+          <span class="block pb-3">
+              <component
+                :is="formatIcon(d.weather.icon)"
+              />
+          </span>
             <p class="m-0 text-center title">
               {{ formatDate(d.sunrise_ts) }}
             </p>
@@ -80,26 +65,13 @@
               class="flex justify-between relative py-2 weather-week__container"
             >
               <span
-                class="
-                  flex
-                  items-center
-                  pr-2.5
-                  text-grey
-                  weather-week__text weather-week__text_left
-                  subtitle
-                "
+                class="flex items-center pr-2.5 text-grey weather-week__text weather-week__text_left subtitle"
               >
                 {{ d.max_temp }}
                 <span class="pl-0.5"><ArrowupIcon /></span>
               </span>
               <span
-                class="
-                  flex
-                  items-center
-                  text-grey
-                  weather-week__text weather-week__text_right
-                  subtitle
-                "
+                class="flex items-center text-grey weather-week__text weather-week__text_right subtitle"
               >
                 {{ d.min_temp }}
                 <span class="pl-0.5"><ArrowdownIcon /></span>
@@ -154,10 +126,12 @@ export default {
       };
     },
     formattedDaytime() {
-      const diff = DateTime.fromSeconds(this.weather.data[0].sunset_ts).diff(
-        DateTime.fromSeconds(this.weather.data[0].sunrise_ts),
-        ["hours", "minutes"]
-      );
+      const diff = DateTime.fromSeconds(
+        this.weather.data[0].sunset_ts
+      ).diff(DateTime.fromSeconds(this.weather.data[0].sunrise_ts), [
+        "hours",
+        "minutes",
+      ]);
       return diff.hours + "h " + Math.round(diff.minutes) + "m";
     },
     getCurrentPeriod() {
@@ -212,7 +186,8 @@ export default {
 
   .weather-week {
     &__item {
-      width: 95px;
+      position: relative;
+      min-width: 95px;
       padding: 16px 22px 8px;
       background-color: var(--color-white);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
