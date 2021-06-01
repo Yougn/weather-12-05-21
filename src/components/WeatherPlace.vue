@@ -1,22 +1,11 @@
 <template>
-  <div class="flex justify-between weather-place">
-    <p class="m-0 px-5 py-4 text-grey weather-place__date">
+  <div class="weather-place">
+    <p class="weather-place__date">
       {{ date }}
     </p>
-    <p
-      class="
-        flex
-        m-0
-        mb-4
-        py-4
-        pr-5
-        pl-6
-        text-center text-blue
-        weather-place__city
-      "
-    >
+    <p class="weather-place__city">
       {{ weather.city_name }}, Russia
-      <span class="pl-3"><PlaceIcon /></span>
+      <span class="pt-1 pl-3"><PlaceIcon /></span>
     </p>
   </div>
 </template>
@@ -39,8 +28,7 @@ export default {
   },
   methods: {
     getNow: function () {
-      const dateTime = DateTime.now().toFormat("ccc, dd LLL yyyy hh:mma");
-      this.date = dateTime;
+      this.date = DateTime.now().toFormat("cccc, dd LLL yyyy hh:mma");
     },
   },
 };
@@ -48,14 +36,17 @@ export default {
 
 <style lang="scss" scoped>
 .weather-place {
+  @apply flex justify-between;
+
   &__date {
+    @apply m-0 px-5 py-4 text-grey;
     max-width: 180px;
     font-size: 14px;
     line-height: 17px;
-    letter-spacing: 1px;
   }
 
   &__city {
+    @apply flex m-0 mb-4 py-4 pr-5 pl-6 text-center text-secondary-color;
     font-size: 16px;
     font-weight: 500;
     line-height: 19px;

@@ -1,8 +1,6 @@
 <template>
-  <div
-    class="flex justify-between items-center m-0 px-10 pt-1 pb-4 weather-now"
-  >
-    <p class="flex flex-col items-center m-0 text-center weather-now__state">
+  <div class="weather-now">
+    <p class="weather-now__state">
       <component
         :is="formatIcon(weather.data[0].weather.icon)"
         class="w-10 h-10"
@@ -14,17 +12,7 @@
     <h2 class="m-0 relative weather-now__temperature">
       {{ formattedTemp(weather.data[0].temp) }}
     </h2>
-    <p
-      class="
-        flex flex-col
-        items-center
-        relative
-        m-0
-        pr-3.5
-        pl-2.5
-        weather-peaks
-      "
-    >
+    <p class="weather-peaks">
       <span class="pb-3 weather-peaks__item weather-peaks__item_up">
         {{ formattedTemp(weather.data[0].max_temp) }} °C
       </span>
@@ -56,7 +44,10 @@ export default {
 
 <style lang="scss" scoped>
 .weather-now {
+  @apply flex justify-between items-center m-0 px-10 pt-1 pb-4;
+
   &__state {
+    @apply flex flex-col items-center m-0 text-center;
     max-width: 60px;
     font-size: 18px;
     font-weight: 500;
@@ -66,59 +57,53 @@ export default {
 
   &__temperature {
     &::after {
-      position: absolute;
+      @apply absolute;
       content: "°";
       top: 10px;
-      right: -4px;
+      right: -6px;
       font-weight: 500;
       font-size: 24px;
       line-height: 29px;
-      color: var(--color-dark-grey);
+      color: var(--dark-grey-color);
     }
 
     &::before {
-      position: absolute;
+      @apply absolute;
       content: "C";
       top: 10px;
-      right: -18px;
+      right: -20px;
       font-weight: 500;
       font-size: 24px;
       line-height: 29px;
-      color: var(--color-dark-grey);
+      color: var(--dark-grey-color);
     }
   }
 
   .weather-peaks {
+    @apply flex flex-col items-center relative m-0 pr-3.5 pl-2.5;
+
     &__item {
-      position: relative;
+      @apply relative;
       font-weight: 300;
       font-size: 16px;
       line-height: 19px;
-      color: var(--color-dark-grey);
+      color: var(--dark-grey-color);
 
       &_up::after {
-        position: absolute;
+        @apply absolute w-2.5 h-2.5 bg-no-repeat bg-center;
         content: "";
         top: 4px;
         right: -10px;
-        width: 10px;
-        height: 10px;
         background-image: url("../assets/arrow.svg");
         transform: matrix(1, 0, 0, -1, 0, 0);
-        background-repeat: no-repeat;
-        background-position: center;
       }
 
       &_down::after {
-        position: absolute;
+        @apply absolute w-2.5 h-2.5 bg-no-repeat bg-center;
         content: "";
         top: 8px;
         right: -10px;
-        width: 10px;
-        height: 10px;
         background-image: url("../assets/arrow.svg");
-        background-repeat: no-repeat;
-        background-position: center;
       }
     }
   }

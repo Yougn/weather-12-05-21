@@ -1,8 +1,8 @@
 <template>
-  <li class="flex flex-col items-center relative w-1/3 mb-8 weather-info__item">
-    <span class="pb-2"><slot /></span>
+  <li class="weather-info__item">
+    <span class="pb-4"><slot /></span>
     <p class="mb-0 title">{{ info }}</p>
-    <span class="pt-2 pb-2 text-grey subtitle">{{ subtitle }}</span>
+    <span class="pt-1 pb-1 text-grey subtitle">{{ subtitle }}</span>
   </li>
 </template>
 
@@ -19,10 +19,12 @@ export default {
 <style lang="scss" scoped>
 .weather-info {
   &__item {
+    @apply flex flex-col items-center relative w-1/3 mb-8;
+
     &:nth-child(4),
     &:nth-child(5),
     &:last-child {
-      margin-bottom: 0;
+      @apply mb-0;
     }
   }
 }

@@ -3,17 +3,16 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     colors: {
-      grey: "#999999",
-      darkGrey: "#666666",
-      blue: "#0da0ea",
-      black: "#000000",
+      "primary-color": "var(--primary-color)",
+      "secondary-color": "var(--secondary-color)",
+      black: "var(--black-color)",
+      grey: "var(--grey-color)",
+      "dark-grey": "var(--dark-grey-color)",
     },
-    backgroundColor: (theme) => ({
-      ...theme("colors"),
-      bgImg: "#8bccfb",
-      bgWhite: "#ffffff",
-    }),
-    extend: {},
+    boxShadow: {
+      sm: "0px -16px 40px rgba(0, 0, 0, 0.2)",
+      md: "0 8px 24px rgba(0, 0, 0, 0.1)",
+    },
   },
   variants: {
     extend: {},

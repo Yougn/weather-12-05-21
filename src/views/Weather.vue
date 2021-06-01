@@ -8,18 +8,14 @@
     </p>
     <div v-else-if="weather">
       <img
-        class="w-full object-cover -mb-6 bg-bgImg weather-bg"
+        class="weather-bg bg-secondary-color"
         :src="getDayOrNightImgPath"
         alt="Street"
       />
-      <div
-        class="flex flex-col relative w-full bg-bgWhite rounded-t-3xl overflow-hidden weather"
-      >
+      <div class="weather bg-primary-color">
         <WeatherPlace />
         <WeatherNow />
-        <ul
-          class="flex flex-wrap justify-between m-0 pt-5 px-4 pb-1 weather-info"
-        >
+        <ul class="weather-info">
           <WeatherInfoItem
             :info="formattedWeather.humidity"
             subtitle="Humidity"
@@ -45,34 +41,24 @@
             <DaytimeIcon />
           </WeatherInfoItem>
         </ul>
-        <ul
-          class="inline-flex m-0 list-none overflow-auto pt-3 px-5 pb-12 weather-week"
-        >
+        <ul class="weather-week">
           <li
-            class="flex flex-col items-center mr-5 weather-week__item"
+            class="weather-week__item"
             v-for="(d, index) in weather.data"
             v-bind:key="index"
           >
-          <span class="block pb-3">
-              <component
-                :is="formatIcon(d.weather.icon)"
-              />
-          </span>
-            <p class="m-0 text-center title">
+            <span class="block pb-3">
+              <component :is="formatIcon(d.weather.icon)" />
+            </span>
+            <p class="m-0 pb-1 text-center title">
               {{ formatDate(d.sunrise_ts) }}
             </p>
-            <span
-              class="flex justify-between relative py-2 weather-week__container"
-            >
-              <span
-                class="flex items-center pr-2.5 text-grey weather-week__text weather-week__text_left subtitle"
-              >
+            <span class="flex justify-between relative pb-2">
+              <span class="pr-2.5 weather-week__text subtitle">
                 {{ d.max_temp }}
                 <span class="pl-0.5"><ArrowupIcon /></span>
               </span>
-              <span
-                class="flex items-center text-grey weather-week__text weather-week__text_right subtitle"
-              >
+              <span class="weather-week__text subtitle">
                 {{ d.min_temp }}
                 <span class="pl-0.5"><ArrowdownIcon /></span>
               </span>
@@ -126,12 +112,10 @@ export default {
       };
     },
     formattedDaytime() {
-      const diff = DateTime.fromSeconds(
-        this.weather.data[0].sunset_ts
-      ).diff(DateTime.fromSeconds(this.weather.data[0].sunrise_ts), [
-        "hours",
-        "minutes",
-      ]);
+      const diff = DateTime.fromSeconds(this.weather.data[0].sunset_ts).diff(
+        DateTime.fromSeconds(this.weather.data[0].sunrise_ts),
+        ["hours", "minutes"]
+      );
       return diff.hours + "h " + Math.round(diff.minutes) + "m";
     },
     getCurrentPeriod() {
@@ -174,35 +158,38 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .weather-bg {
+  @apply w-full object-cover -mb-6;
   height: calc(100vh - 510px);
   min-height: 50px;
 }
 
 .weather {
-  box-shadow: 0px -16px 40px rgba(0, 0, 0, 0.2);
-  z-index: 2;
+  @apply flex flex-col relative w-full rounded-t-3xl overflow-hidden shadow-sm z-10;
+
+  .weather-info {
+    @apply flex flex-wrap justify-between m-0;
+    padding: 16px 6px 8px;
+  }
 
   .weather-week {
+    @apply inline-flex m-0 list-none overflow-auto pt-3 px-5 pb-12;
+
     &__item {
-      position: relative;
+      @apply flex flex-col items-center mr-5  relative px-5 pt-4 pb-2 bg-primary-color shadow-md;
       min-width: 95px;
-      padding: 16px 22px 8px;
-      background-color: var(--color-white);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
       border-radius: 16px;
 
       &:last-child::before {
-        position: absolute;
+        @apply absolute bottom-0 bg-no-repeat bg-center w-5 h-0.5;
         content: "";
         right: -20px;
-        bottom: 0;
-        width: 20px;
-        height: 1px;
-        background-repeat: no-repeat;
-        background-position: center;
       }
+    }
+
+    &__text {
+      @apply flex items-center text-grey;
     }
   }
 }
